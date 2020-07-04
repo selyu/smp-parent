@@ -1,0 +1,5 @@
+name: "Core"
+version: 1.0-SNAPSHOT
+api-version: "1.16"
+main: "org.selyu.smp.core.Core"
+author: "Lillian Armes"

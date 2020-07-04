@@ -16,6 +16,10 @@ public final class UserInterfaceProvider {
     private final ScoreboardManager scoreboardManager;
     private final Map<UUID, Scoreboard> bukkitScoreboardMap = new HashMap<>();
 
+    /**
+     * @param plugin The {@link JavaPlugin} registering the provider
+     * @param updateSpeedTicks The speed in ticks (20/s) that the task will run
+     */
     public UserInterfaceProvider(@NotNull JavaPlugin plugin, long updateSpeedTicks) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(new UserInterfaceListener(this), plugin);
@@ -39,6 +43,7 @@ public final class UserInterfaceProvider {
      */
     public void removeBoard(@NotNull Player player) {
         scoreboardManager.removeBoard(player);
+        bukkitScoreboardMap.remove(player.getUniqueId());
     }
 
     /**

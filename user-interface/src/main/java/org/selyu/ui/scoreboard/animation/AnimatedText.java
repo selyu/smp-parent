@@ -21,10 +21,7 @@ public abstract class AnimatedText {
         framesList.add(frame);
     }
 
-    /**
-     * If there is more than one frame increment the frame count and then check
-     * if the count % {@link AnimatedText#frameUpdateSpeed} is zero, if so move to the next frame
-     */
+    // Thanks to https://github.com/idrizp
     public void processFrame() {
         if (framesList.size() > 1) {
             frameCount++;
@@ -34,7 +31,7 @@ public abstract class AnimatedText {
         }
     }
 
-    public final String getCurrentFrame() {
+    public final @NotNull String getCurrentFrame() {
         if (currentFrameIdx >= framesList.size())
             currentFrameIdx = 0;
         return framesList.get(currentFrameIdx);
