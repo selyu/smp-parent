@@ -37,4 +37,40 @@ class BalanceCommand(private val profileManager: ProfileManager, private val cor
         val component = "<gradient:green:dark_green>You have set ${profile.getProperUsername()} balance to $newBalance shekels!</gradient>".asComponent
         core.sendComponentMessage(sender, component)
     }
+
+    @Subcommand("add|give")
+    @CommandPermission("core.balance.edit")
+    @CommandCompletion("@profiles")
+    fun onAdd(sender: CommandSender, profile: Profile, addedBalance: Double) {
+        val player = profile.toPlayer()
+        profile.balance += addedBalance
+
+        if (player != null) {
+            val component = "<gradient:green:dark_green>You were given ${profile.balance} shekels!</gradient>".asComponent
+            core.sendComponentMessage(player, component)
+        } else {
+            repository.profileStore.save(profile)
+        }
+
+        val component = "<gradient:green:dark_green>You gave $addedBalance shekels to ${profile.getProperUsername()}!</gradient>".asComponent
+        core.sendComponentMessage(sender, component)
+    }
+
+    @Subcommand("remove|take")
+    @CommandPermission("core.balance.edit")
+    @CommandCompletion("@profiles")
+    fun onRemove(sender: CommandSender, profile: Profile, removedBalance: Double) {
+        val player = profile.toPlayer()
+        profile.balance -= removedBalance
+
+        if (player != null) {
+            val component = "<gradient:red:dark_red>You had ${profile.balance} shekels removed from your balance!</gradient>".asComponent
+            core.sendComponentMessage(player, component)
+        } else {
+            repository.profileStore.save(profile)
+        }
+
+        val component = "<gradient:green:dark_green>You took $removedBalance shekels from ${profile.getProperUsername()}!</gradient>".asComponent
+        core.sendComponentMessage(sender, component)
+    }
 }
