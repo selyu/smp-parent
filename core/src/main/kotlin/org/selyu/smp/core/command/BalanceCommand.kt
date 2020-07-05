@@ -2,6 +2,7 @@ package org.selyu.smp.core.command
 
 import co.aikar.commands.BaseCommand
 import co.aikar.commands.annotation.*
+import net.kyori.adventure.text.Component
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.selyu.smp.core.Core
@@ -43,10 +44,10 @@ class BalanceCommand(private val profileManager: ProfileManager, private val cor
     @CommandCompletion("@profiles")
     fun onAdd(sender: CommandSender, profile: Profile, addedBalance: Double) {
         val player = profile.toPlayer()
-        profile.balance += addedBalance
+        profile.addBalance(addedBalance)
 
         if (player != null) {
-            val component = "<gradient:green:dark_green>You were given ${profile.balance} shekels!</gradient>".asComponent
+            val component = "<gradient:green:dark_green>You were given $addedBalance shekels!</gradient>".asComponent
             core.sendComponentMessage(player, component)
         } else {
             repository.profileStore.save(profile)
@@ -61,16 +62,20 @@ class BalanceCommand(private val profileManager: ProfileManager, private val cor
     @CommandCompletion("@profiles")
     fun onRemove(sender: CommandSender, profile: Profile, removedBalance: Double) {
         val player = profile.toPlayer()
-        profile.balance -= removedBalance
+        val result = profile.removeBalance(removedBalance)
+        val component = if(result) {
+            if (player != null) {
+                val component1 = "<gradient:red:dark_red>You had $removedBalance shekels removed from your balance!</gradient>".asComponent
+                core.sendComponentMessage(player, component1)
+            } else {
+                repository.profileStore.save(profile)
+            }
 
-        if (player != null) {
-            val component = "<gradient:red:dark_red>You had ${profile.balance} shekels removed from your balance!</gradient>".asComponent
-            core.sendComponentMessage(player, component)
+            "<gradient:green:dark_green>You took $removedBalance shekels from ${profile.username}!</gradient>".asComponent
         } else {
-            repository.profileStore.save(profile)
+            "<gradient:red:dark_red>${profile.username} doesn't have enough shekels to take!</gradient>".asComponent
         }
 
-        val component = "<gradient:green:dark_green>You took $removedBalance shekels from ${profile.getProperUsername()}!</gradient>".asComponent
         core.sendComponentMessage(sender, component)
     }
 }

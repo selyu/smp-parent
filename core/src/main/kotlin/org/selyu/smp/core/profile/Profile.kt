@@ -5,6 +5,18 @@ import org.bukkit.entity.Player
 import java.util.*
 
 data class Profile(val uniqueId: UUID, val username: String, var balance: Double) {
+    fun addBalance(addedBalance: Double) {
+        balance += addedBalance
+    }
+
+    fun removeBalance(removedBalance: Double): Boolean {
+        if (balance < removedBalance)
+            return false
+
+        balance -= removedBalance
+        return true
+    }
+
     fun toPlayer(): Player? = Bukkit.getPlayer(uniqueId)
 
     fun getProperUsername(): String {
