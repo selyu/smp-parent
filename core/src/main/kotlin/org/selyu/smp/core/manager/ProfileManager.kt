@@ -21,6 +21,7 @@ class ProfileManager(private val core: Core, private val repository: Repository)
             await(repository.profileStore.save(ProfileFactory.create(event.uniqueId, event.name)))
         }
 
+        profile.username = event.name
         cache[event.uniqueId] = profile
     }
 

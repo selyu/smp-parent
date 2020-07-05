@@ -10,7 +10,7 @@ import org.selyu.smp.core.profile.Profile
 
 class ProfileContextResolver(private val profileManager: ProfileManager, private val repository: Repository) : ContextResolver<Profile, BukkitCommandExecutionContext> {
     override fun getContext(c: BukkitCommandExecutionContext): Profile {
-        val username = c.popFirstArg()
+        val username = c.popFirstArg().toLowerCase()
         val fromCache = profileManager.getProfileByUsername(username)
         return if (fromCache.isPresent) {
             fromCache.get()

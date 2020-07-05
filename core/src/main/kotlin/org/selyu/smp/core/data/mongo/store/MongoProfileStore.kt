@@ -26,7 +26,7 @@ class MongoProfileStore(private val collection: MongoCollection<Document>) : Pro
 
     override fun save(value: Profile): CompletableFuture<Profile> = supplyAsync {
         val document = Document("_id", value.uniqueId)
-        document.append("username", value.username)
+        document.append("username", value.username.toLowerCase())
         document.append("balance", value.balance)
 
         collection.replaceOne(eq("_id", value.uniqueId), document, replaceOptions)

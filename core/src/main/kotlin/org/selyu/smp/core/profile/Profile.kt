@@ -4,7 +4,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.util.*
 
-data class Profile(val uniqueId: UUID, val username: String, var balance: Double) {
+data class Profile(val uniqueId: UUID, var username: String, var balance: Double) {
     fun addBalance(addedBalance: Double) {
         balance += addedBalance
     }

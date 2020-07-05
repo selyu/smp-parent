@@ -4,10 +4,8 @@ import co.aikar.commands.PaperCommandManager
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import net.kyori.adventure.text.Component
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.selyu.smp.core.command.BalanceCommand
-import org.selyu.smp.core.command.completions.ProfileCompletionHandler
 import org.selyu.smp.core.command.resolver.ProfileContextResolver
 import org.selyu.smp.core.data.Repository
 import org.selyu.smp.core.data.mongo.MongoRepository
@@ -44,7 +42,6 @@ class Core : JavaPlugin() {
         }
 
         commandManager.commandContexts.registerContext(Profile::class.java, ProfileContextResolver(profileManager, repository))
-        commandManager.commandCompletions.registerAsyncCompletion("profiles", ProfileCompletionHandler(server))
 
         commandManager.registerCommand(BalanceCommand(profileManager, this, repository))
 

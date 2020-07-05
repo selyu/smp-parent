@@ -2,7 +2,6 @@ package org.selyu.smp.core.command
 
 import co.aikar.commands.BaseCommand
 import co.aikar.commands.annotation.*
-import net.kyori.adventure.text.Component
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.selyu.smp.core.Core
@@ -23,7 +22,7 @@ class BalanceCommand(private val profileManager: ProfileManager, private val cor
 
     @Subcommand("set")
     @CommandPermission("core.balance.edit")
-    @CommandCompletion("@profiles")
+    @CommandCompletion("@players")
     fun onSet(sender: CommandSender, profile: Profile, newBalance: Double) {
         val player = profile.toPlayer()
         profile.balance = newBalance
@@ -41,7 +40,7 @@ class BalanceCommand(private val profileManager: ProfileManager, private val cor
 
     @Subcommand("add|give")
     @CommandPermission("core.balance.edit")
-    @CommandCompletion("@profiles")
+    @CommandCompletion("@players")
     fun onAdd(sender: CommandSender, profile: Profile, addedBalance: Double) {
         val player = profile.toPlayer()
         profile.addBalance(addedBalance)
@@ -59,11 +58,11 @@ class BalanceCommand(private val profileManager: ProfileManager, private val cor
 
     @Subcommand("remove|take")
     @CommandPermission("core.balance.edit")
-    @CommandCompletion("@profiles")
+    @CommandCompletion("@players")
     fun onRemove(sender: CommandSender, profile: Profile, removedBalance: Double) {
         val player = profile.toPlayer()
         val result = profile.removeBalance(removedBalance)
-        val component = if(result) {
+        val component = if (result) {
             if (player != null) {
                 val component1 = "<gradient:red:dark_red>You had $removedBalance shekels removed from your balance!</gradient>".asComponent
                 core.sendComponentMessage(player, component1)
