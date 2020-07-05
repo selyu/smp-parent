@@ -27,6 +27,7 @@ class MongoProfileStore(private val collection: MongoCollection<Document>) : Pro
     override fun insert(value: Profile): CompletableFuture<Profile> = supplyAsync {
         val document = Document("_id", value.uniqueId)
         document.append("username", value.username)
+        document.append("balance", value.balance)
 
         collection.replaceOne(eq("_id", value.uniqueId), document, replaceOptions)
         return@supplyAsync value
@@ -40,6 +41,6 @@ class MongoProfileStore(private val collection: MongoCollection<Document>) : Pro
         if (document == null)
             return null
 
-        return Profile(document.get("_id", UUID::class.java), document.getString("username"))
+        return Profile(document.get("_id", UUID::class.java), document.getString("username"), document.getDouble("balance"))
     }
 }

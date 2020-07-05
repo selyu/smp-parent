@@ -8,8 +8,6 @@ import org.bukkit.plugin.java.JavaPlugin
 import java.awt.Color
 import kotlin.math.ceil
 
-private val MINI_MESSAGE = MiniMessage.builder().build()
-
 fun JavaPlugin.registerListeners(vararg listeners: Listener) = listeners.forEach {
     server.pluginManager.registerEvents(it, this)
 }
@@ -35,8 +33,8 @@ fun String.rainbow(): String {
     return stringBuilder.toString()
 }
 
-val String.miniMessage: Component
-    get() = MINI_MESSAGE.parse(this)
+val String.asComponent: Component
+    get() = MiniMessage.get().parse(this)
 
 val String.color: String
     get() = ChatColor.translateAlternateColorCodes('&', this)
