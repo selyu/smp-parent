@@ -24,7 +24,7 @@ class MongoProfileStore(private val collection: MongoCollection<Document>) : Pro
         return@supplyAsync Optional.ofNullable(deserialize(document))
     }
 
-    override fun insert(value: Profile): CompletableFuture<Profile> = supplyAsync {
+    override fun save(value: Profile): CompletableFuture<Profile> = supplyAsync {
         val document = Document("_id", value.uniqueId)
         document.append("username", value.username)
         document.append("balance", value.balance)

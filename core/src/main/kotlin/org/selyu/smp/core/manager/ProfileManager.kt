@@ -18,7 +18,7 @@ class ProfileManager(private val core: Core, private val repository: Repository)
         val profile = if (optionalProfile.isPresent) {
             optionalProfile.get()
         } else {
-            await(repository.profileStore.insert(ProfileFactory.create(event.uniqueId, event.name)))
+            await(repository.profileStore.save(ProfileFactory.create(event.uniqueId, event.name)))
         }
 
         cache[event.uniqueId] = profile
@@ -27,7 +27,7 @@ class ProfileManager(private val core: Core, private val repository: Repository)
     fun quit(event: PlayerQuitEvent) {
         val profile = cache[event.player.uniqueId] ?: return
 
-        repository.profileStore.insert(profile).thenRun {
+        repository.profileStore.save(profile).thenRun {
             cache.remove(profile.uniqueId)
         }
     }
@@ -37,5 +37,10 @@ class ProfileManager(private val core: Core, private val repository: Repository)
             core.server.getPlayer(uuid)!!.kickPlayer(Errors.PLEASE_RE_LOGIN)
 
         return Optional.ofNullable(cache[uuid])
+    }
+
+    fun getProfileByUsername(username: String): Optional<Profile> {
+        val profile = cache.values.find { it.username.equals(username, true) }
+        return Optional.ofNullable(profile)
     }
 }

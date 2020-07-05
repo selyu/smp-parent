@@ -1,16 +1,20 @@
 package org.selyu.smp.core
 
-import me.mattstudios.mf.base.CommandManager
+import co.aikar.commands.PaperCommandManager
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import net.kyori.adventure.text.Component
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.selyu.smp.core.command.BalanceCommand
+import org.selyu.smp.core.command.completions.ProfileCompletionHandler
+import org.selyu.smp.core.command.resolver.ProfileContextResolver
 import org.selyu.smp.core.data.Repository
 import org.selyu.smp.core.data.mongo.MongoRepository
 import org.selyu.smp.core.listener.ProfileListener
 import org.selyu.smp.core.listener.ScoreboardListener
 import org.selyu.smp.core.manager.ProfileManager
+import org.selyu.smp.core.profile.Profile
 import org.selyu.smp.core.settings.Settings
 import org.selyu.smp.core.util.registerListeners
 import org.selyu.ui.UserInterfaceProvider
@@ -21,7 +25,7 @@ class Core : JavaPlugin() {
     private lateinit var repository: Repository
     private lateinit var profileManager: ProfileManager
     private lateinit var audiences: BukkitAudiences
-    private lateinit var commandManager: CommandManager
+    private lateinit var commandManager: PaperCommandManager
 
     override fun onLoad() {
         Settings.init(dataFolder)
@@ -33,13 +37,16 @@ class Core : JavaPlugin() {
         repository = MongoRepository()
         profileManager = ProfileManager(this, repository)
         audiences = BukkitAudiences.create(this)
-        commandManager = CommandManager(this, true)
+        commandManager = PaperCommandManager(this)
 
         server.onlinePlayers.forEach {
             it.kickPlayer(Errors.PLEASE_RE_LOGIN)
         }
 
-        commandManager.register(BalanceCommand(profileManager))
+        commandManager.commandContexts.registerContext(Profile::class.java, ProfileContextResolver(profileManager, repository))
+        commandManager.commandCompletions.registerAsyncCompletion("profiles", ProfileCompletionHandler(server))
+
+        commandManager.registerCommand(BalanceCommand(profileManager, this, repository))
 
         registerListeners(
                 ProfileListener(this, profileManager),
@@ -51,5 +58,5 @@ class Core : JavaPlugin() {
         repository.closeConnections()
     }
 
-    fun sendComponentMessage(player: Player, component: Component) = audiences.player(player).sendMessage(component)
+    fun sendComponentMessage(player: CommandSender, component: Component) = audiences.audience(player).sendMessage(component)
 }
