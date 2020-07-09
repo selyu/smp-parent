@@ -8,15 +8,14 @@ import org.selyu.smp.core.Core
 import org.selyu.smp.core.data.Repository
 import org.selyu.smp.core.manager.ProfileManager
 import org.selyu.smp.core.profile.Profile
-import org.selyu.smp.core.util.asComponent
-import org.selyu.smp.core.util.color
+import org.selyu.smp.core.util.*
 
 @CommandAlias("balance|bal|shekels")
 class BalanceCommand(private val profileManager: ProfileManager, private val core: Core, private val repository: Repository) : BaseCommand() {
     @Default
     fun onDefault(sender: Player) {
         profileManager.getProfile(sender.uniqueId).ifPresent {
-            sender.sendMessage("&aYou have ${it.balance} shekels!".color)
+            core.sendComponentMessage(sender, "You have ${it.balance} shekels!".info())
         }
     }
 
@@ -28,13 +27,13 @@ class BalanceCommand(private val profileManager: ProfileManager, private val cor
         profile.balance = newBalance
 
         if (player != null) {
-            val component = "<gradient:green:dark_green>Your balance has been set to $newBalance shekels!</gradient>".asComponent
+            val component = "Someone set your balance to $newBalance shekels!".info()
             core.sendComponentMessage(player, component)
         } else {
             repository.profileStore.save(profile)
         }
 
-        val component = "<gradient:green:dark_green>You have set ${profile.getProperUsername()} balance to $newBalance shekels!</gradient>".asComponent
+        val component = "You have set ${profile.getProperUsername()} balance to $newBalance shekels!".success()
         core.sendComponentMessage(sender, component)
     }
 
@@ -46,13 +45,13 @@ class BalanceCommand(private val profileManager: ProfileManager, private val cor
         profile.addBalance(addedBalance)
 
         if (player != null) {
-            val component = "<gradient:green:dark_green>You were given $addedBalance shekels!</gradient>".asComponent
+            val component = "Someone gave you $addedBalance shekels!".info()
             core.sendComponentMessage(player, component)
         } else {
             repository.profileStore.save(profile)
         }
 
-        val component = "<gradient:green:dark_green>You gave $addedBalance shekels to ${profile.getProperUsername()}!</gradient>".asComponent
+        val component = "You gave $addedBalance shekels to ${profile.username}!".success()
         core.sendComponentMessage(sender, component)
     }
 
@@ -64,15 +63,15 @@ class BalanceCommand(private val profileManager: ProfileManager, private val cor
         val result = profile.removeBalance(removedBalance)
         val component = if (result) {
             if (player != null) {
-                val component1 = "<gradient:red:dark_red>You had $removedBalance shekels removed from your balance!</gradient>".asComponent
+                val component1 = "Someone took $removedBalance shekels from you!".info()
                 core.sendComponentMessage(player, component1)
             } else {
                 repository.profileStore.save(profile)
             }
 
-            "<gradient:green:dark_green>You took $removedBalance shekels from ${profile.username}!</gradient>".asComponent
+            "You took $removedBalance shekels from ${profile.username}!".success()
         } else {
-            "<gradient:red:dark_red>${profile.username} doesn't have enough shekels to take!</gradient>".asComponent
+            "${profile.username} only has ${profile.balance} shekels!".error()
         }
 
         core.sendComponentMessage(sender, component)

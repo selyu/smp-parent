@@ -3,17 +3,8 @@ package org.selyu.smp.core.util
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.md_5.bungee.api.ChatColor
-import org.bukkit.event.Listener
-import org.bukkit.plugin.java.JavaPlugin
 import java.awt.Color
 import kotlin.math.ceil
-
-fun JavaPlugin.registerListeners(vararg listeners: Listener) = listeners.forEach {
-    server.pluginManager.registerEvents(it, this)
-}
-
-operator fun ChatColor.plus(string: String): String = toString() + string
-operator fun ChatColor.plus(char: Char): String = toString() + char
 
 fun String.rainbow(): String {
     val stringBuilder = StringBuilder()
@@ -32,6 +23,11 @@ fun String.rainbow(): String {
 
     return stringBuilder.toString()
 }
+
+fun String.success(): Component = "<color:#00C851><bold>!!</bold> $this".asComponent
+fun String.info(): Component = "<color:#33b5e5><bold>!!</bold> $this".asComponent
+fun String.warning(): Component = "<color:#FFbb33><bold>!!</bold> $this".asComponent
+fun String.error(): Component = "<color:#ff4444><bold>!!</bold> $this".asComponent
 
 val String.asComponent: Component
     get() = MiniMessage.get().parse(this)

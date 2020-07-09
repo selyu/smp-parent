@@ -8,13 +8,18 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.selyu.smp.core.Core
 import org.selyu.smp.core.Errors
 import org.selyu.smp.core.manager.ProfileManager
-import org.selyu.smp.core.util.asComponent
+import org.selyu.smp.core.util.warning
+import java.util.*
 
 class ProfileListener(private val core: Core, private val profileManager: ProfileManager) : Listener {
+    private val loginTimes = hashMapOf<UUID, Long>()
+
     @EventHandler
     fun onLogin(event: AsyncPlayerPreLoginEvent) {
         try {
+            val start = System.currentTimeMillis()
             profileManager.login(event)
+            loginTimes[event.uniqueId] = System.currentTimeMillis() - start
         } catch (e: Exception) {
             e.printStackTrace()
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, Errors.ERROR_LOADING_PROFILE)
@@ -23,9 +28,9 @@ class ProfileListener(private val core: Core, private val profileManager: Profil
 
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
-        val player = event.player
-        val profileLoadedComponent = "<red>Your profile has loaded successfully!".asComponent
-        core.sendComponentMessage(player, profileLoadedComponent)
+        if (event.player.hasPermission("core.debug"))
+            core.sendComponentMessage(event.player, "Your profile took ${loginTimes[event.player.uniqueId]}ms to load!".warning())
+        loginTimes.remove(event.player.uniqueId)
     }
 
     @EventHandler
