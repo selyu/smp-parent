@@ -3,19 +3,32 @@ package org.selyu.smp.core.command
 import co.aikar.commands.BaseCommand
 import co.aikar.commands.annotation.*
 import org.bukkit.command.CommandSender
+import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
 import org.selyu.smp.core.Core
 import org.selyu.smp.core.data.Repository
 import org.selyu.smp.core.manager.ProfileManager
 import org.selyu.smp.core.profile.Profile
-import org.selyu.smp.core.util.*
+import org.selyu.smp.core.util.error
+import org.selyu.smp.core.util.info
+import org.selyu.smp.core.util.success
 
 @CommandAlias("balance|bal|shekels")
 class BalanceCommand(private val profileManager: ProfileManager, private val core: Core, private val repository: Repository) : BaseCommand() {
     @Default
-    fun onDefault(sender: Player) {
-        profileManager.getProfile(sender.uniqueId).ifPresent {
-            core.sendComponentMessage(sender, "You have ${it.balance} shekels!".info())
+    fun onDefault(sender: CommandSender, @Optional target: Profile?) {
+        when {
+            target != null -> {
+                sender.info("${target.username} has ${target.balance} shekels!")
+            }
+            sender is ConsoleCommandSender -> {
+                sender.error("Usage: /balance <player>")
+            }
+            else -> {
+                profileManager.getProfile((sender as Player).uniqueId).ifPresent {
+                    sender.info("You have ${it.balance} shekels!")
+                }
+            }
         }
     }
 
@@ -27,14 +40,12 @@ class BalanceCommand(private val profileManager: ProfileManager, private val cor
         profile.balance = newBalance
 
         if (player != null) {
-            val component = "Someone set your balance to $newBalance shekels!".info()
-            core.sendComponentMessage(player, component)
+            player.info("Someone set your balance to $newBalance shekels!")
         } else {
             repository.profileStore.save(profile)
         }
 
-        val component = "You have set ${profile.getProperUsername()} balance to $newBalance shekels!".success()
-        core.sendComponentMessage(sender, component)
+        sender.success("You have set ${profile.getProperUsername()} balance to $newBalance shekels!")
     }
 
     @Subcommand("add|give")
@@ -45,14 +56,12 @@ class BalanceCommand(private val profileManager: ProfileManager, private val cor
         profile.addBalance(addedBalance)
 
         if (player != null) {
-            val component = "Someone gave you $addedBalance shekels!".info()
-            core.sendComponentMessage(player, component)
+            player.info("Someone gave you $addedBalance shekels!")
         } else {
             repository.profileStore.save(profile)
         }
 
-        val component = "You gave $addedBalance shekels to ${profile.username}!".success()
-        core.sendComponentMessage(sender, component)
+        sender.success("You gave $addedBalance shekels to ${profile.username}!")
     }
 
     @Subcommand("remove|take")
@@ -61,19 +70,16 @@ class BalanceCommand(private val profileManager: ProfileManager, private val cor
     fun onRemove(sender: CommandSender, profile: Profile, removedBalance: Double) {
         val player = profile.toPlayer()
         val result = profile.removeBalance(removedBalance)
-        val component = if (result) {
+        if (result) {
             if (player != null) {
-                val component1 = "Someone took $removedBalance shekels from you!".info()
-                core.sendComponentMessage(player, component1)
+                player.info("Someone took $removedBalance shekels from you!")
             } else {
                 repository.profileStore.save(profile)
             }
 
-            "You took $removedBalance shekels from ${profile.username}!".success()
+            sender.success("You took $removedBalance shekels from ${profile.username}!")
         } else {
-            "${profile.username} only has ${profile.balance} shekels!".error()
+            sender.error("${profile.username} only has ${profile.balance} shekels!")
         }
-
-        core.sendComponentMessage(sender, component)
     }
 }

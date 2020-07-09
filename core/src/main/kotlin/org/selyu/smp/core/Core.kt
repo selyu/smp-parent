@@ -2,8 +2,6 @@ package org.selyu.smp.core
 
 import co.aikar.commands.PaperCommandManager
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
-import net.kyori.adventure.text.Component
-import org.bukkit.command.CommandSender
 import org.bukkit.plugin.java.JavaPlugin
 import org.selyu.smp.core.command.BalanceCommand
 import org.selyu.smp.core.command.resolver.ProfileContextResolver
@@ -22,8 +20,12 @@ class Core : JavaPlugin() {
     private lateinit var userInterfaceProvider: UserInterfaceProvider
     private lateinit var repository: Repository
     private lateinit var profileManager: ProfileManager
-    private lateinit var audiences: BukkitAudiences
     private lateinit var commandManager: PaperCommandManager
+
+    companion object {
+        @JvmStatic
+        lateinit var audienceProvider: BukkitAudiences
+    }
 
     override fun onLoad() {
         Settings.init(dataFolder)
@@ -34,7 +36,7 @@ class Core : JavaPlugin() {
         userInterfaceProvider = UserInterfaceProvider(this, 1)
         repository = MongoRepository()
         profileManager = ProfileManager(this, repository)
-        audiences = BukkitAudiences.create(this)
+        audienceProvider = BukkitAudiences.create(this)
         commandManager = PaperCommandManager(this)
 
         server.onlinePlayers.forEach {
@@ -54,6 +56,4 @@ class Core : JavaPlugin() {
     override fun onDisable() {
         repository.closeConnections()
     }
-
-    fun sendComponentMessage(player: CommandSender, component: Component) = audiences.audience(player).sendMessage(component)
 }

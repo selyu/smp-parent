@@ -3,6 +3,9 @@ package org.selyu.smp.core.util
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.md_5.bungee.api.ChatColor
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
+import org.selyu.smp.core.Core
 import java.awt.Color
 import kotlin.math.ceil
 
@@ -24,10 +27,25 @@ fun String.rainbow(): String {
     return stringBuilder.toString()
 }
 
-fun String.success(): Component = "<color:#00C851><bold>!!</bold> $this".asComponent
-fun String.info(): Component = "<color:#33b5e5><bold>!!</bold> $this".asComponent
-fun String.warning(): Component = "<color:#FFbb33><bold>!!</bold> $this".asComponent
-fun String.error(): Component = "<color:#ff4444><bold>!!</bold> $this".asComponent
+fun CommandSender.success(text: String) {
+    val component = "<color:${if(this is Player)"#00C851" else "green"}><bold>!!</bold> $text".asComponent
+    Core.audienceProvider.audience(this).sendMessage(component)
+}
+
+fun CommandSender.info(text: String) {
+    val component = "<color:${if(this is Player)"#33b5e5" else "aqua"}><bold>!!</bold> $text".asComponent
+    Core.audienceProvider.audience(this).sendMessage(component)
+}
+
+fun CommandSender.warning(text: String) {
+    val component = "<color:${if(this is Player)"#FFbb33" else "yellow"}><bold>!!</bold> $text".asComponent
+    Core.audienceProvider.audience(this).sendMessage(component)
+}
+
+fun CommandSender.error(text: String) {
+    val component = "<color:${if(this is Player)"#ff4444" else "red"}><bold>!!</bold> $text".asComponent
+    Core.audienceProvider.audience(this).sendMessage(component)
+}
 
 val String.asComponent: Component
     get() = MiniMessage.get().parse(this)

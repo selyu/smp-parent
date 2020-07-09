@@ -29,7 +29,7 @@ class ProfileListener(private val core: Core, private val profileManager: Profil
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
         if (event.player.hasPermission("core.debug"))
-            core.sendComponentMessage(event.player, "Your profile took ${loginTimes[event.player.uniqueId]}ms to load!".warning())
+            event.player.warning("Your profile took ${loginTimes[event.player.uniqueId]}ms to load!")
         loginTimes.remove(event.player.uniqueId)
     }
 
