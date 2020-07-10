@@ -1,6 +1,7 @@
 package org.selyu.smp.core.command
 
 import co.aikar.commands.BaseCommand
+import co.aikar.commands.InvalidCommandArgument
 import co.aikar.commands.annotation.*
 import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
@@ -22,7 +23,7 @@ class BalanceCommand(private val profileManager: ProfileManager, private val cor
                 sender.info("${target.username} has ${target.balance} shekels!")
             }
             sender is ConsoleCommandSender -> {
-                sender.error("Usage: /balance <player>")
+                throw InvalidCommandArgument(true)
             }
             else -> {
                 profileManager.getProfile((sender as Player).uniqueId).ifPresent {
