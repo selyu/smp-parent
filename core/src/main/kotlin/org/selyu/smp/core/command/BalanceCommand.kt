@@ -17,6 +17,7 @@ import org.selyu.smp.core.util.success
 @CommandAlias("balance|bal|shekels")
 class BalanceCommand(private val profileManager: ProfileManager, private val core: Core, private val repository: Repository) : BaseCommand() {
     @Default
+    @Syntax("[player]")
     fun onDefault(sender: CommandSender, @Optional target: Profile?) {
         when {
             target != null -> {
@@ -36,6 +37,7 @@ class BalanceCommand(private val profileManager: ProfileManager, private val cor
     @Subcommand("set")
     @CommandPermission("core.balance.edit")
     @CommandCompletion("@players")
+    @Syntax("<player> <balance>")
     fun onSet(sender: CommandSender, profile: Profile, newBalance: Double) {
         val player = profile.toPlayer()
         profile.balance = newBalance
@@ -49,9 +51,10 @@ class BalanceCommand(private val profileManager: ProfileManager, private val cor
         sender.success("You have set ${profile.getProperUsername()} balance to $newBalance shekels!")
     }
 
-    @Subcommand("add|give")
+    @Subcommand("add")
     @CommandPermission("core.balance.edit")
     @CommandCompletion("@players")
+    @Syntax("<player> <amount>")
     fun onAdd(sender: CommandSender, profile: Profile, addedBalance: Double) {
         val player = profile.toPlayer()
         profile.addBalance(addedBalance)
@@ -65,9 +68,10 @@ class BalanceCommand(private val profileManager: ProfileManager, private val cor
         sender.success("You gave $addedBalance shekels to ${profile.username}!")
     }
 
-    @Subcommand("remove|take")
+    @Subcommand("remove")
     @CommandPermission("core.balance.edit")
     @CommandCompletion("@players")
+    @Syntax("<player> <amount>")
     fun onRemove(sender: CommandSender, profile: Profile, removedBalance: Double) {
         val player = profile.toPlayer()
         val result = profile.removeBalance(removedBalance)
