@@ -8,7 +8,6 @@
     <artifactId>parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>user-interface</module>
         <module>config</module>
         <module>core</module>
     </modules>

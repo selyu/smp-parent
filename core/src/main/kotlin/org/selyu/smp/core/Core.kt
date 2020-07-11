@@ -16,7 +16,6 @@ import org.selyu.smp.core.profile.Profile
 import org.selyu.smp.core.settings.Settings
 import org.selyu.smp.core.util.registerListeners
 import org.selyu.ui.UserInterfaceProvider
-import org.selyu.ui.scoreboard.title.ScoreboardTitle
 import java.util.*
 
 class Core : JavaPlugin() {
@@ -35,7 +34,6 @@ class Core : JavaPlugin() {
     }
 
     override fun onEnable() {
-        ScoreboardTitle.frameUpdateSpeed = 1
         userInterfaceProvider = UserInterfaceProvider(this, 1)
         repository = MongoRepository()
         profileManager = ProfileManager(this, repository)

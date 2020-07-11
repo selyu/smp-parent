@@ -28,6 +28,10 @@
             <id>aikar</id>
             <url>https://repo.aikar.co/content/groups/aikar/</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -38,9 +42,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.selyu.smp</groupId>
-            <artifactId>ui</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>org.selyu</groupId>
+            <artifactId>user-interface</artifactId>
+            <version>1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

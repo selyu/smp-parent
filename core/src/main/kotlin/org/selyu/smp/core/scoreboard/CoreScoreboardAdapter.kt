@@ -12,5 +12,7 @@ class CoreScoreboardAdapter : ScoreboardAdapter {
                     .addObjective("&dWelcome to the SMP!")
                     .build()
 
-    override fun getTitle(): ScoreboardTitle = ScoreboardTitle.of(false, "Selyu SMP".rainbow())
+    override fun getTitle(): ScoreboardTitle = ScoreboardTitle.of(false, "Selyu SMP".rainbow()).also {
+        it.updateSpeed = 1
+    }
 }
