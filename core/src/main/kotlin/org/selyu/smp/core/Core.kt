@@ -40,10 +40,6 @@ class Core : JavaPlugin() {
         audienceProvider = BukkitAudiences.create(this)
         commandManager = PaperCommandManager(this)
 
-        server.onlinePlayers.forEach {
-            it.kickPlayer(Errors.PLEASE_RE_LOGIN)
-        }
-
         commandManager.locales.addMessageBundle("acf-locale", Locale.US)
         commandManager.locales.defaultLocale = Locale.US
 
@@ -60,6 +56,10 @@ class Core : JavaPlugin() {
                 ProfileListener(profileManager),
                 ScoreboardListener(userInterfaceProvider)
         )
+
+        server.onlinePlayers.forEach {
+            it.kickPlayer(Errors.CORE_LOADED)
+        }
     }
 
     override fun onDisable() {

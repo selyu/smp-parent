@@ -35,7 +35,7 @@ class ProfileManager(private val core: Core, private val repository: Repository)
 
     fun getProfile(uuid: UUID): Optional<Profile> {
         if (cache[uuid] == null && core.server.getPlayer(uuid) != null)
-            core.server.getPlayer(uuid)!!.kickPlayer(Errors.PLEASE_RE_LOGIN)
+            core.server.getPlayer(uuid)!!.kickPlayer(Errors.ERROR_FETCHING_PROFILE)
 
         return Optional.ofNullable(cache[uuid])
     }
