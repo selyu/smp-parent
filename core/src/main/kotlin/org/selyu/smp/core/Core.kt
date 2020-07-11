@@ -56,10 +56,10 @@ class Core : JavaPlugin() {
 
         commandManager.commandContexts.registerContext(Profile::class.java, ProfileContextResolver(profileManager, repository))
 
-        commandManager.registerCommand(BalanceCommand(profileManager, this, repository))
+        commandManager.registerCommand(BalanceCommand(profileManager, repository))
 
         registerListeners(
-                ProfileListener(this, profileManager),
+                ProfileListener(profileManager),
                 ScoreboardListener(userInterfaceProvider)
         )
     }

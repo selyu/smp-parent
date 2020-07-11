@@ -6,7 +6,6 @@ import co.aikar.commands.annotation.*
 import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
-import org.selyu.smp.core.Core
 import org.selyu.smp.core.data.Repository
 import org.selyu.smp.core.manager.ProfileManager
 import org.selyu.smp.core.profile.Profile
@@ -15,7 +14,7 @@ import org.selyu.smp.core.util.info
 import org.selyu.smp.core.util.success
 
 @CommandAlias("balance|bal|shekels")
-class BalanceCommand(private val profileManager: ProfileManager, private val core: Core, private val repository: Repository) : BaseCommand() {
+class BalanceCommand(private val profileManager: ProfileManager, private val repository: Repository) : BaseCommand() {
     @Default
     @Syntax("[player]")
     fun onDefault(sender: CommandSender, @Optional target: Profile?) {

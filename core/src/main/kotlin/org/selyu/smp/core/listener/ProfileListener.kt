@@ -5,13 +5,12 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
-import org.selyu.smp.core.Core
 import org.selyu.smp.core.Errors
 import org.selyu.smp.core.manager.ProfileManager
 import org.selyu.smp.core.util.warning
 import java.util.*
 
-class ProfileListener(private val core: Core, private val profileManager: ProfileManager) : Listener {
+class ProfileListener(private val profileManager: ProfileManager) : Listener {
     private val loginTimes = hashMapOf<UUID, Long>()
 
     @EventHandler
