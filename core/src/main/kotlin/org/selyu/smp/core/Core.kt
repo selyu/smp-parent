@@ -9,8 +9,10 @@ import org.selyu.smp.core.command.BalanceCommand
 import org.selyu.smp.core.command.resolver.ProfileContextResolver
 import org.selyu.smp.core.data.Repository
 import org.selyu.smp.core.data.mongo.MongoRepository
+import org.selyu.smp.core.listener.CoreItemListener
 import org.selyu.smp.core.listener.ProfileListener
 import org.selyu.smp.core.listener.ScoreboardListener
+import org.selyu.smp.core.manager.CoreItemManager
 import org.selyu.smp.core.manager.ProfileManager
 import org.selyu.smp.core.profile.Profile
 import org.selyu.smp.core.settings.Settings
@@ -22,6 +24,7 @@ class Core : JavaPlugin() {
     private lateinit var userInterfaceProvider: UserInterfaceProvider
     private lateinit var repository: Repository
     private lateinit var profileManager: ProfileManager
+    private lateinit var coreItemManager: CoreItemManager
     private lateinit var commandManager: PaperCommandManager
 
     companion object {
@@ -34,10 +37,11 @@ class Core : JavaPlugin() {
     }
 
     override fun onEnable() {
+        audienceProvider = BukkitAudiences.create(this)
         userInterfaceProvider = UserInterfaceProvider(this, 1)
         repository = MongoRepository()
         profileManager = ProfileManager(this, repository)
-        audienceProvider = BukkitAudiences.create(this)
+        coreItemManager = CoreItemManager(this)
         commandManager = PaperCommandManager(this)
 
         commandManager.locales.addMessageBundle("acf-locale", Locale.US)
@@ -54,7 +58,8 @@ class Core : JavaPlugin() {
 
         registerListeners(
                 ProfileListener(profileManager),
-                ScoreboardListener(userInterfaceProvider)
+                ScoreboardListener(userInterfaceProvider),
+                CoreItemListener(coreItemManager)
         )
 
         server.onlinePlayers.forEach {
