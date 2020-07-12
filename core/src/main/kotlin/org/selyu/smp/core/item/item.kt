@@ -14,6 +14,8 @@ interface CoreItem {
 @Target(AnnotationTarget.CLASS)
 annotation class ItemData(val material: Material, val modelData: Int)
 
+data class WrappedCoreItem(val coreItem: CoreItem, val itemData: ItemData)
+
 @Retention
 @Target(AnnotationTarget.FUNCTION)
 annotation class ItemEventHandler
