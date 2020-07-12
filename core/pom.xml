@@ -48,6 +48,12 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>com.github.idrizp.oss-parent</groupId>
+            <artifactId>config</artifactId>
+            <version>7ba1e223b9</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
@@ -69,12 +75,6 @@
             <groupId>net.kyori</groupId>
             <artifactId>adventure-platform-bukkit</artifactId>
             <version>4.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.selyu.smp</groupId>
-            <artifactId>config</artifactId>
-            <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
