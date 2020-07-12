@@ -4,6 +4,7 @@ import co.aikar.commands.MessageType
 import co.aikar.commands.PaperCommandManager
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bukkit.ChatColor
+import org.bukkit.NamespacedKey
 import org.bukkit.plugin.java.JavaPlugin
 import org.selyu.smp.core.command.BalanceCommand
 import org.selyu.smp.core.command.resolver.ProfileContextResolver
@@ -30,6 +31,10 @@ class Core : JavaPlugin() {
     companion object {
         @JvmStatic
         lateinit var audienceProvider: BukkitAudiences
+        private lateinit var privateInstance: JavaPlugin
+
+        @JvmStatic
+        fun keyOf(key: String): NamespacedKey = NamespacedKey(privateInstance, key)
     }
 
     override fun onLoad() {
@@ -37,6 +42,7 @@ class Core : JavaPlugin() {
     }
 
     override fun onEnable() {
+        privateInstance = this
         audienceProvider = BukkitAudiences.create(this)
         userInterfaceProvider = UserInterfaceProvider(this, 1)
         repository = MongoRepository()
