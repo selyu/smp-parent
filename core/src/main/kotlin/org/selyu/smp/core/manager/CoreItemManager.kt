@@ -3,12 +3,9 @@ package org.selyu.smp.core.manager
 import org.selyu.smp.core.Core
 import org.selyu.smp.core.item.CoreItem
 import org.selyu.smp.core.item.WrappedCoreItem
-import org.selyu.smp.core.item.impl.ExampleCoreItem
 
 class CoreItemManager(core: Core) {
-    val items = wrap(
-            ExampleCoreItem()
-    )
+    val items = wrap()
 
     init {
         items.forEach {
