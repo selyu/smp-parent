@@ -6,6 +6,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerShearEntityEvent
 import org.bukkit.inventory.ItemStack
 import org.selyu.smp.core.manager.CoreItemManager
 
@@ -24,6 +25,14 @@ class CoreItemListener(private val coreItemManager: CoreItemManager) : Listener 
             return
 
         coreItemManager.runEvent(event, event.player.equipment!!.itemInMainHand)
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    fun onShear(event: PlayerShearEntityEvent) {
+        if (event.isCancelled || !isPossibleItem(event.item))
+            return
+
+        coreItemManager.runEvent(event, event.item)
     }
 
     private fun isPossibleItem(itemStack: ItemStack?): Boolean {

@@ -5,6 +5,8 @@ import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.player.PlayerShearEntityEvent
+import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.Recipe
@@ -57,22 +59,30 @@ abstract class DurableCoreItem(material: Material, modelData: Int, private val m
         }
     }
 
-    private fun handleDurability(player: Player, itemStack: ItemStack) {
+    private fun handleDurability(player: Player, itemStack: ItemStack, equipmentSlot: EquipmentSlot = EquipmentSlot.HAND, setItemInHand: Boolean = false) {
         val meta = itemStack.itemMeta ?: throw NullPointerException("Meta is null!")
         val newDurability = meta.persistentDataContainer.getOrDefault(DURABILITY_KEY, PersistentDataType.INTEGER, maxDurability) - 1
         if (newDurability == -1) {
             player.playSound(player.location, Sound.ENTITY_ITEM_BREAK, 1f, 1f)
-            player.equipment!!.setItemInMainHand(null)
+            player.equipment?.setItem(equipmentSlot, null)
         } else {
             meta.lore = addDurability(getLore(), newDurability)
             meta.persistentDataContainer.set(DURABILITY_KEY, PersistentDataType.INTEGER, newDurability)
             itemStack.itemMeta = meta
+
+            if(setItemInHand)
+                player.equipment?.setItem(equipmentSlot, itemStack)
         }
     }
 
     @ItemEventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
         handleDurability(event.player, event.player.equipment!!.itemInMainHand)
+    }
+
+    @ItemEventHandler
+    fun onShear(event: PlayerShearEntityEvent) {
+        handleDurability(event.player, event.item, event.hand, true)
     }
 
     abstract fun getLore(): MutableList<String>
