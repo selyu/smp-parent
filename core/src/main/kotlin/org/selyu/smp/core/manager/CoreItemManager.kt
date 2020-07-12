@@ -1,30 +1,36 @@
 package org.selyu.smp.core.manager
 
+import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
-import org.selyu.smp.core.item.CoreItem
-import org.selyu.smp.core.item.ItemData
-import org.selyu.smp.core.item.WrappedCoreItem
+import org.bukkit.inventory.ShapelessRecipe
+import org.selyu.smp.core.Core
 import org.selyu.smp.core.item.impl.ExampleCoreItem
 
-class CoreItemManager {
-    private val customItems = of(
+class CoreItemManager(core: Core) {
+    private val customItems = arrayOf(
             ExampleCoreItem()
     )
+
+    init {
+        // TODO: Better way to handle recipes for custom items?
+        var item = customItems[0].getItem()
+        item = customItems[0].applyExtraData(item)
+
+        val exampleItemRecipe = ShapelessRecipe(NamespacedKey(core, "example_item"), item)
+        exampleItemRecipe.addIngredient(1, Material.DIAMOND)
+
+        core.server.addRecipe(exampleItemRecipe)
+    }
 
     fun isValid(itemStack: ItemStack): Boolean {
         if (!itemStack.hasItemMeta())
             return false
 
         return customItems
-                .filter { wrapped -> wrapped.itemData.material == itemStack.type }
-                .filter { wrapped -> wrapped.itemData.modelData == itemStack.itemMeta!!.customModelData }
+                .filter { coreItem -> coreItem.material == itemStack.type }
+                .filter { coreItem -> coreItem.modelData == itemStack.itemMeta!!.customModelData }
+                .filter { coreItem -> coreItem.validate(itemStack) }
                 .any()
-    }
-
-    private fun of(vararg coreItems: CoreItem): List<WrappedCoreItem> {
-        return coreItems.map { coreItem ->
-            val annotation = coreItem.javaClass.getAnnotation(ItemData::class.java) ?: return@map null
-            WrappedCoreItem(coreItem, annotation)
-        }.filterNotNull()
     }
 }

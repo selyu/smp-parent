@@ -4,15 +4,11 @@ import co.aikar.commands.MessageType
 import co.aikar.commands.PaperCommandManager
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bukkit.ChatColor
-import org.bukkit.Material
-import org.bukkit.NamespacedKey
-import org.bukkit.inventory.ShapelessRecipe
 import org.bukkit.plugin.java.JavaPlugin
 import org.selyu.smp.core.command.BalanceCommand
 import org.selyu.smp.core.command.resolver.ProfileContextResolver
 import org.selyu.smp.core.data.Repository
 import org.selyu.smp.core.data.mongo.MongoRepository
-import org.selyu.smp.core.item.impl.ExampleCoreItem
 import org.selyu.smp.core.listener.CoreItemListener
 import org.selyu.smp.core.listener.ProfileListener
 import org.selyu.smp.core.listener.ScoreboardListener
@@ -45,7 +41,7 @@ class Core : JavaPlugin() {
         userInterfaceProvider = UserInterfaceProvider(this, 1)
         repository = MongoRepository()
         profileManager = ProfileManager(this, repository)
-        coreItemManager = CoreItemManager()
+        coreItemManager = CoreItemManager(this)
         commandManager = PaperCommandManager(this)
 
         commandManager.locales.addMessageBundle("acf-locale", Locale.US)
@@ -69,12 +65,6 @@ class Core : JavaPlugin() {
         server.onlinePlayers.forEach {
             it.kickPlayer(Errors.CORE_LOADED)
         }
-
-        // TODO: Better way to handle recipes for custom items?
-        val exampleItemRecipe = ShapelessRecipe(NamespacedKey(this, "example_item"), ExampleCoreItem().getItem())
-        exampleItemRecipe.addIngredient(1, Material.DIAMOND)
-
-        server.addRecipe(exampleItemRecipe)
     }
 
     override fun onDisable() {

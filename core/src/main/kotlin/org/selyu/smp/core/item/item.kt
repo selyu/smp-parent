@@ -6,15 +6,29 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
-interface CoreItem {
-    fun getItem(): ItemStack
+abstract class CoreItem(val material: Material, val modelData: Int) {
+    abstract fun getDisplayName(): String
+    abstract fun getLore(): MutableList<String>
+
+    fun getItem(): ItemStack = ItemStack(material).also {
+        if (it.itemMeta == null)
+            return@also
+
+        val meta = it.itemMeta!!
+        meta.setCustomModelData(modelData)
+        meta.setDisplayName(getDisplayName())
+        meta.lore = getLore()
+
+        it.itemMeta = meta
+    }
+
+    open fun applyExtraData(itemStack: ItemStack): ItemStack = itemStack
+    open fun validate(itemStack: ItemStack): Boolean = true
 }
 
 @Retention
 @Target(AnnotationTarget.CLASS)
 annotation class ItemData(val material: Material, val modelData: Int)
-
-data class WrappedCoreItem(val coreItem: CoreItem, val itemData: ItemData)
 
 @Retention
 @Target(AnnotationTarget.FUNCTION)

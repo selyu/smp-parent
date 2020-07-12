@@ -1,17 +1,11 @@
 package org.selyu.smp.core.item.impl
 
 import org.bukkit.Material
-import org.bukkit.inventory.ItemStack
 import org.selyu.smp.core.item.CoreItem
-import org.selyu.smp.core.item.ItemData
+import org.selyu.smp.core.util.color
 
-@ItemData(material = Material.DIAMOND_PICKAXE, modelData = 1)
-class ExampleCoreItem : CoreItem {
-    override fun getItem(): ItemStack = ItemStack(Material.DIAMOND_PICKAXE).also {
-        val meta = it.itemMeta ?: return@also
-        meta.setDisplayName("&cExample Item")
-        meta.setCustomModelData(1)
+class ExampleCoreItem : CoreItem(Material.DIAMOND_PICKAXE, 1) {
+    override fun getDisplayName(): String = "&bExample Pickaxe".color
 
-        it.itemMeta = meta
-    }
+    override fun getLore(): MutableList<String> = mutableListOf("&cExample Lore".color)
 }
