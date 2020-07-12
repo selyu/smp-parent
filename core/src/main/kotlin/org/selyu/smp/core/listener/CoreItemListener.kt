@@ -10,7 +10,6 @@ import org.selyu.smp.core.item.getValidItems
 import org.selyu.smp.core.manager.CoreItemManager
 
 class CoreItemListener(private val coreItemManager: CoreItemManager) : Listener {
-    @Suppress("NON_EXHAUSTIVE_WHEN")
     @EventHandler(priority = EventPriority.HIGHEST)
     fun onInteract(event: PlayerInteractEvent) {
         if (event.useInteractedBlock() == Event.Result.DENY || !isPossibleItem(event.item))
