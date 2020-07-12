@@ -3,6 +3,7 @@ package org.selyu.smp.core.item
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.player.PlayerShearEntityEvent
@@ -14,6 +15,7 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.selyu.smp.core.Core
 import org.selyu.smp.core.util.color
+import java.util.concurrent.ThreadLocalRandom
 
 abstract class CoreItem(val material: Material, val modelData: Int) {
     protected open fun itemOf(displayName: String = "", vararg lore: String = arrayOf()) = ItemStack(material).also {
@@ -59,9 +61,22 @@ abstract class DurableCoreItem(material: Material, modelData: Int, private val m
         }
     }
 
-    private fun handleDurability(player: Player, itemStack: ItemStack, equipmentSlot: EquipmentSlot = EquipmentSlot.HAND, setItemInHand: Boolean = false) {
+    private fun handleDurability(player: Player, itemStack: ItemStack, equipmentSlot: EquipmentSlot = EquipmentSlot.HAND, setItemInSlot: Boolean = false) {
         val meta = itemStack.itemMeta ?: throw NullPointerException("Meta is null!")
-        val newDurability = meta.persistentDataContainer.getOrDefault(DURABILITY_KEY, PersistentDataType.INTEGER, maxDurability) - 1
+
+        val chanceToNegate = if(meta.hasEnchant(Enchantment.DURABILITY)) {
+            val level = meta.getEnchantLevel(Enchantment.DURABILITY)
+            100 / (level + 1)
+        } else {
+            0
+        }
+        val randomNumber = ThreadLocalRandom.current().nextInt(1, 100)
+        val newDurability = if(randomNumber <= chanceToNegate) {
+            meta.persistentDataContainer.getOrDefault(DURABILITY_KEY, PersistentDataType.INTEGER, maxDurability)
+        } else {
+            meta.persistentDataContainer.getOrDefault(DURABILITY_KEY, PersistentDataType.INTEGER, maxDurability) - 1
+        }
+
         if (newDurability == -1) {
             player.playSound(player.location, Sound.ENTITY_ITEM_BREAK, 1f, 1f)
             player.equipment?.setItem(equipmentSlot, null)
@@ -70,7 +85,7 @@ abstract class DurableCoreItem(material: Material, modelData: Int, private val m
             meta.persistentDataContainer.set(DURABILITY_KEY, PersistentDataType.INTEGER, newDurability)
             itemStack.itemMeta = meta
 
-            if(setItemInHand)
+            if(setItemInSlot)
                 player.equipment?.setItem(equipmentSlot, itemStack)
         }
     }
