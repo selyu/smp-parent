@@ -2,11 +2,7 @@ package org.selyu.smp.core.item
 
 import org.bukkit.Bukkit
 import org.bukkit.Material
-import org.bukkit.block.Block
-import org.bukkit.entity.Entity
-import org.bukkit.entity.Player
-import org.bukkit.event.player.PlayerInteractEntityEvent
-import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.Event
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.Recipe
 import org.bukkit.plugin.java.JavaPlugin
@@ -35,55 +31,30 @@ abstract class CoreItem(val material: Material, val modelData: Int) {
 }
 
 class WrappedCoreItem(val parent: CoreItem) {
-    private val subscribingMethods = mutableListOf<SubscribedMethod>()
+    private val subscribingMethods = mutableListOf<Method>()
 
     init {
         subscribingMethods.addAll(
                 parent.javaClass.declaredMethods
                         .filter { it.parameterCount == 1 }
                         .filter { Event::class.java.isAssignableFrom(it.parameterTypes[0]) }
-                        .map { SubscribedMethod(it, it.parameterTypes[0]) }
         )
     }
 
     fun runEvent(event: Event) {
         subscribingMethods
-                .filter { event.javaClass.isAssignableFrom(it.method.parameterTypes[0]) }
-                .forEach { it.method.invoke(parent, event) }
+                .filter { event.javaClass.isAssignableFrom(it.parameterTypes[0]) }
+                .forEach { it.invoke(parent, event) }
     }
+}
 
-    class SubscribedMethod(val method: Method, val event: Any)
+fun Iterable<WrappedCoreItem>.getValidItems(against: ItemStack): Iterable<WrappedCoreItem> {
+    return this
+            .filter { wrapped -> wrapped.parent.material == against.type }
+            .filter { wrapped -> wrapped.parent.modelData == against.itemMeta!!.customModelData }
+            .filter { wrapped -> wrapped.parent.validate(against) }
 }
 
 @Retention
 @Target(AnnotationTarget.FUNCTION)
 annotation class ItemEventHandler
-
-interface Event
-
-data class DamageEntityEvent(val player: Player, val itemStack: ItemStack, val damagedEntity: Entity) : Event
-data class LeftClickEvent(val player: Player, val itemStack: ItemStack) : Event {
-    var clickedEntity: Entity? = null
-    var clickedBlock: Block? = null
-
-    constructor(event: PlayerInteractEvent) : this(event.player, event.item!!) {
-        clickedBlock = event.clickedBlock
-    }
-
-    constructor(itemStack: ItemStack, event: PlayerInteractEntityEvent) : this(event.player, itemStack) {
-        clickedEntity = event.rightClicked
-    }
-}
-
-data class RightClickEvent(val player: Player, val itemStack: ItemStack) : Event {
-    var clickedEntity: Entity? = null
-    var clickedBlock: Block? = null
-
-    constructor(event: PlayerInteractEvent) : this(event.player, event.item!!) {
-        clickedBlock = event.clickedBlock
-    }
-
-    constructor(itemStack: ItemStack, event: PlayerInteractEntityEvent) : this(event.player, itemStack) {
-        clickedEntity = event.rightClicked
-    }
-}
