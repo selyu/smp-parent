@@ -9,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.selyu.smp.core.item.DurableCoreItem
 import org.selyu.smp.core.util.color
 
-class DiamondShearsItem : DurableCoreItem(Material.SHEARS, 1, 1487) {
+class DiamondShearsItem : DurableCoreItem("diamond_shears", Material.SHEARS, 1, 1487) {
     override fun getLore(): MutableList<String> = mutableListOf("&7&oEspecially durable!".color)
 
     override fun getItem(): ItemStack = itemOf("&bDiamond Shears".color)

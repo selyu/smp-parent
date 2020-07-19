@@ -17,7 +17,12 @@ import org.selyu.smp.core.Core
 import org.selyu.smp.core.util.color
 import java.util.concurrent.ThreadLocalRandom
 
-abstract class CoreItem(val material: Material, val modelData: Int) {
+abstract class CoreItem(private val internalName: String, val material: Material, val modelData: Int) {
+    companion object {
+        @JvmStatic
+        val INTERNAL_NAME_KEY = Core.keyOf("internal_name")
+    }
+
     protected open fun itemOf(displayName: String = "", vararg lore: String = arrayOf()) = ItemStack(material).also {
         if (!it.hasItemMeta()) {
             it.itemMeta = Bukkit.getServer().itemFactory.getItemMeta(material) ?: return@also
@@ -29,6 +34,7 @@ abstract class CoreItem(val material: Material, val modelData: Int) {
         if (lore.isNotEmpty())
             meta.lore = lore.toMutableList()
         meta.setCustomModelData(modelData)
+        meta.persistentDataContainer.set(INTERNAL_NAME_KEY, PersistentDataType.STRING, internalName)
 
         it.itemMeta = meta
     }
@@ -39,9 +45,12 @@ abstract class CoreItem(val material: Material, val modelData: Int) {
     open fun getRecipe(plugin: JavaPlugin): Recipe? = null
 }
 
-val DURABILITY_KEY = Core.keyOf("durability")
+abstract class DurableCoreItem(internalName: String, material: Material, modelData: Int, private val maxDurability: Int) : CoreItem(internalName, material, modelData) {
+    companion object {
+        @JvmStatic
+        val DURABILITY_KEY = Core.keyOf("durability")
+    }
 
-abstract class DurableCoreItem(material: Material, modelData: Int, private val maxDurability: Int) : CoreItem(material, modelData) {
     private fun addDurability(list: MutableList<String>, durability: Int): MutableList<String> {
         list.add("")
         list.add("&fDurability: $durability / $maxDurability".color)
@@ -64,14 +73,14 @@ abstract class DurableCoreItem(material: Material, modelData: Int, private val m
     private fun handleDurability(player: Player, itemStack: ItemStack, equipmentSlot: EquipmentSlot = EquipmentSlot.HAND, setItemInSlot: Boolean = false) {
         val meta = itemStack.itemMeta ?: throw NullPointerException("Meta is null!")
 
-        val chanceToNegate = if(meta.hasEnchant(Enchantment.DURABILITY)) {
+        val chanceToNegate = if (meta.hasEnchant(Enchantment.DURABILITY)) {
             val level = meta.getEnchantLevel(Enchantment.DURABILITY)
             100 / (level + 1)
         } else {
             0
         }
         val randomNumber = ThreadLocalRandom.current().nextInt(1, 100)
-        val newDurability = if(randomNumber <= chanceToNegate) {
+        val newDurability = if (randomNumber <= chanceToNegate) {
             meta.persistentDataContainer.getOrDefault(DURABILITY_KEY, PersistentDataType.INTEGER, maxDurability)
         } else {
             meta.persistentDataContainer.getOrDefault(DURABILITY_KEY, PersistentDataType.INTEGER, maxDurability) - 1
@@ -85,7 +94,7 @@ abstract class DurableCoreItem(material: Material, modelData: Int, private val m
             meta.persistentDataContainer.set(DURABILITY_KEY, PersistentDataType.INTEGER, newDurability)
             itemStack.itemMeta = meta
 
-            if(setItemInSlot)
+            if (setItemInSlot)
                 player.equipment?.setItem(equipmentSlot, itemStack)
         }
     }
@@ -100,7 +109,7 @@ abstract class DurableCoreItem(material: Material, modelData: Int, private val m
         handleDurability(event.player, event.item, event.hand, true)
     }
 
-    abstract fun getLore(): MutableList<String>
+    open fun getLore(): MutableList<String> = mutableListOf()
 }
 
 @Retention
