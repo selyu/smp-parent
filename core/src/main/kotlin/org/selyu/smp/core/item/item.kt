@@ -23,7 +23,7 @@ abstract class CoreItem(private val internalName: String, val material: Material
         val INTERNAL_NAME_KEY = Core.keyOf("internal_name")
     }
 
-    protected open fun itemOf(displayName: String = "", vararg lore: String = arrayOf()) = ItemStack(material).also {
+    protected open fun itemOf(displayName: String = "", lore: MutableList<String> = mutableListOf()) = ItemStack(material).also {
         if (!it.hasItemMeta()) {
             it.itemMeta = Bukkit.getServer().itemFactory.getItemMeta(material) ?: return@also
         }
@@ -39,8 +39,10 @@ abstract class CoreItem(private val internalName: String, val material: Material
         it.itemMeta = meta
     }
 
-    abstract fun getItem(): ItemStack
+    abstract fun getDisplayName(): String
+    open fun getLore(): MutableList<String> = mutableListOf()
 
+    open fun getItem(): ItemStack = itemOf(getDisplayName().color, getLore().color as MutableList<String>)
     open fun validate(itemStack: ItemStack): Boolean = true
     open fun getRecipe(plugin: JavaPlugin): Recipe? = null
 }
@@ -57,12 +59,12 @@ abstract class DurableCoreItem(internalName: String, material: Material, modelDa
         return list
     }
 
-    override fun itemOf(displayName: String, vararg lore: String): ItemStack {
-        return super.itemOf(displayName, *lore).also {
+    override fun itemOf(displayName: String, lore: MutableList<String>): ItemStack {
+        return super.itemOf(displayName, lore).also {
             val meta = it.itemMeta ?: throw NullPointerException("Meta is null!")
             meta.isUnbreakable = true
 
-            meta.lore = addDurability(lore.toMutableList(), maxDurability)
+            meta.lore = addDurability(lore, maxDurability)
             meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES)
             meta.persistentDataContainer.set(DURABILITY_KEY, PersistentDataType.INTEGER, maxDurability)
 
@@ -108,8 +110,6 @@ abstract class DurableCoreItem(internalName: String, material: Material, modelDa
     fun onShear(event: PlayerShearEntityEvent) {
         handleDurability(event.player, event.item, event.hand, true)
     }
-
-    open fun getLore(): MutableList<String> = mutableListOf()
 }
 
 @Retention
