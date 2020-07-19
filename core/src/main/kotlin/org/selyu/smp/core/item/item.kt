@@ -1,6 +1,7 @@
 package org.selyu.smp.core.item
 
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
@@ -100,12 +101,14 @@ abstract class DurableCoreItem(internalName: String, material: Material, modelDa
 
     @ItemEventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
-        handleDurability(event.player, event.player.equipment!!.itemInMainHand)
+        if (event.player.gameMode != GameMode.CREATIVE)
+            handleDurability(event.player, event.player.equipment!!.itemInMainHand)
     }
 
     @ItemEventHandler
     fun onShear(event: PlayerShearEntityEvent) {
-        handleDurability(event.player, event.item, event.hand, true)
+        if (event.player.gameMode != GameMode.CREATIVE)
+            handleDurability(event.player, event.item, event.hand, true)
     }
 }
 
