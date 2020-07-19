@@ -2,27 +2,18 @@ package org.selyu.smp.core.manager
 
 import org.bukkit.event.Event
 import org.bukkit.inventory.ItemStack
-import org.selyu.smp.core.Core
 import org.selyu.smp.core.item.CoreItem
 import org.selyu.smp.core.item.DurableCoreItem
 import org.selyu.smp.core.item.ItemEventHandler
 import org.selyu.smp.core.item.impl.DiamondShearsItem
 import java.lang.reflect.Method
 
-class CoreItemManager(core: Core) {
+class CoreItemManager {
     private val items = listOf(
             DiamondShearsItem()
     )
 
     private val subscribersMap = wrap(items)
-
-    init {
-        items.forEach {
-            val recipe = it.getRecipe(core)
-            if (recipe != null)
-                core.server.addRecipe(recipe)
-        }
-    }
 
     fun runEvent(event: Event, itemStack: ItemStack) {
         val subscribers = subscribersMap[event.javaClass] ?: return

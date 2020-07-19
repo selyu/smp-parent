@@ -10,9 +10,7 @@ import org.bukkit.event.player.PlayerShearEntityEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.Recipe
 import org.bukkit.persistence.PersistentDataType
-import org.bukkit.plugin.java.JavaPlugin
 import org.selyu.smp.core.Core
 import org.selyu.smp.core.util.color
 import java.util.concurrent.ThreadLocalRandom
@@ -44,7 +42,6 @@ abstract class CoreItem(private val internalName: String, val material: Material
 
     open fun getItem(): ItemStack = itemOf(getDisplayName().color, getLore().color as MutableList<String>)
     open fun validate(itemStack: ItemStack): Boolean = true
-    open fun getRecipe(plugin: JavaPlugin): Recipe? = null
 }
 
 abstract class DurableCoreItem(internalName: String, material: Material, modelData: Int, private val maxDurability: Int) : CoreItem(internalName, material, modelData) {

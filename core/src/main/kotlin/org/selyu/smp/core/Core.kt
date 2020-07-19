@@ -47,7 +47,7 @@ class Core : JavaPlugin() {
         userInterfaceProvider = UserInterfaceProvider(this, 1)
         repository = MongoRepository()
         profileManager = ProfileManager(this, repository)
-        coreItemManager = CoreItemManager(this)
+        coreItemManager = CoreItemManager()
         commandManager = PaperCommandManager(this)
 
         commandManager.locales.addMessageBundle("acf-locale", Locale.US)
