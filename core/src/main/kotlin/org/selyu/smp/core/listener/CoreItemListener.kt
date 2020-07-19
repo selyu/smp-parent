@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerShearEntityEvent
 import org.bukkit.inventory.ItemStack
 import org.selyu.smp.core.manager.CoreItemManager
+import org.selyu.smp.core.util.isCustomItem
 
 class CoreItemListener(private val coreItemManager: CoreItemManager) : Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -36,6 +37,6 @@ class CoreItemListener(private val coreItemManager: CoreItemManager) : Listener 
     }
 
     private fun isPossibleItem(itemStack: ItemStack?): Boolean {
-        return itemStack != null && itemStack.hasItemMeta() && itemStack.itemMeta!!.hasCustomModelData()
+        return itemStack != null && itemStack.isCustomItem()
     }
 }
