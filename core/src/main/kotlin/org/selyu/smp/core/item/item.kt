@@ -43,6 +43,7 @@ abstract class CoreItem(private val internalName: String, val material: Material
 
     open fun getItem(): ItemStack = itemOf(getDisplayName().color, getLore().color as MutableList<String>)
     open fun validate(itemStack: ItemStack): Boolean = true
+    open fun getRecipe(): CoreRecipe? = null
 }
 
 abstract class DurableCoreItem(internalName: String, material: Material, modelData: Int, private val maxDurability: Int) : CoreItem(internalName, material, modelData) {
