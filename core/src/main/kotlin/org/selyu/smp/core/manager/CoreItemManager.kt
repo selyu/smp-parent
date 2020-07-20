@@ -41,6 +41,8 @@ class CoreItemManager {
         return itemStack
     }
 
+    fun getItemsForType(coreItemType: CoreItemType): List<CoreItem> = items.filter { it.coreItemType == coreItemType }
+
     private fun wrap(coreItems: List<CoreItem>): Map<Class<*>, MutableSet<SubscribedMethod>> {
         val map = hashMapOf<Class<*>, MutableSet<SubscribedMethod>>()
 

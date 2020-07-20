@@ -46,7 +46,6 @@ abstract class CoreItem(private val internalName: String, val coreItemType: Core
 
         val meta = it.itemMeta!!
         meta.setDisplayName(getDisplayName().color)
-        meta.lore = getLore().color as MutableList<String>
         meta.setCustomModelData(modelData)
 
         it.itemMeta = meta
