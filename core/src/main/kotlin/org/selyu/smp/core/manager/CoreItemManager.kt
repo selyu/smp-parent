@@ -8,13 +8,15 @@ import org.selyu.smp.core.item.CoreItemType
 import org.selyu.smp.core.item.DurableCoreItem
 import org.selyu.smp.core.item.ItemEventHandler
 import org.selyu.smp.core.item.impl.DiamondShearsItem
+import org.selyu.smp.core.item.impl.HellstoneIngotItem
 import org.selyu.smp.core.util.ensureMeta
 import org.selyu.smp.core.util.plus
 import java.lang.reflect.Method
 
 class CoreItemManager {
-    private val items: List<CoreItem> = listOf(
-            DiamondShearsItem()
+    private val items = listOf(
+            DiamondShearsItem(),
+            HellstoneIngotItem()
     )
 
     private val subscribersMap = wrap(items)

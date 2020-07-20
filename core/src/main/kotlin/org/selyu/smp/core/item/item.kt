@@ -17,7 +17,8 @@ import org.selyu.smp.core.util.ensureMeta
 import java.util.concurrent.ThreadLocalRandom
 
 enum class CoreItemType(val correctName: String) {
-    SHEARS("Shears");
+    SHEARS("Shears"),
+    INGOT("Ingots")
 }
 
 abstract class CoreItem(private val internalName: String, val coreItemType: CoreItemType, val material: Material, val modelData: Int) {

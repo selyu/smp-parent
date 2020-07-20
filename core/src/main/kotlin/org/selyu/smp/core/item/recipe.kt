@@ -7,12 +7,12 @@ import org.bukkit.persistence.PersistentDataType
 import java.util.function.Predicate
 
 class CoreRecipe(private val coreItem: CoreItem) {
-    val keys = mutableSetOf<RecipeKey>()
+    val keys = hashSetOf<RecipeKey>()
 
     fun addKey(recipeKey: RecipeKey) = keys.add(recipeKey)
 
     fun test(playerInventory: PlayerInventory): Boolean {
-        val unmatchedKeys = keys
+        val matchedKeys = hashSetOf<RecipeKey>()
         val updatedItems = hashMapOf<Int, ItemStack>()
 
         for (i in playerInventory.contents.indices) {
@@ -20,20 +20,24 @@ class CoreRecipe(private val coreItem: CoreItem) {
             if (itemStack == null || itemStack.type == Material.AIR)
                 continue
 
-            unmatchedKeys.forEach { key ->
-                if (key.test(itemStack)) {
-                    unmatchedKeys.remove(key)
+            keys.forEach { key ->
+                if (matchedKeys.contains(key))
+                    return@forEach
 
-                    itemStack.amount -= key.amount
-                    updatedItems[i] = itemStack
+                if (key.test(itemStack)) {
+                    val newItemStack = itemStack.clone()
+                    newItemStack.amount -= key.amount
+
+                    updatedItems[i] = newItemStack
+                    matchedKeys.add(key)
                 }
             }
         }
 
-        if (unmatchedKeys.isEmpty())
+        if (matchedKeys.size == keys.size)
             updatedItems.forEach { (idx, item) -> playerInventory.setItem(idx, item) }
 
-        return unmatchedKeys.isEmpty()
+        return matchedKeys.size == keys.size
     }
 
     fun getFinalItem(): ItemStack = coreItem.getItem().clone()
