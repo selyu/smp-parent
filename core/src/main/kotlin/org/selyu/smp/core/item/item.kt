@@ -14,18 +14,21 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.selyu.smp.core.Core
 import org.selyu.smp.core.util.color
+import org.selyu.smp.core.util.ensureMeta
 import java.util.concurrent.ThreadLocalRandom
 
-abstract class CoreItem(private val internalName: String, val material: Material, val modelData: Int) {
+enum class CoreItemType(val correctName: String) {
+    SHEARS("Shears");
+}
+
+abstract class CoreItem(private val internalName: String, val coreItemType: CoreItemType, val material: Material, val modelData: Int) {
     companion object {
         @JvmStatic
         val INTERNAL_NAME_KEY = Core.keyOf("internal_name")
     }
 
     protected open fun itemOf(displayName: String = "", lore: MutableList<String> = mutableListOf()) = ItemStack(material).also {
-        if (!it.hasItemMeta()) {
-            it.itemMeta = Bukkit.getServer().itemFactory.getItemMeta(material) ?: return@also
-        }
+        it.ensureMeta()
 
         val meta = it.itemMeta!!
         if (displayName.isNotBlank())
@@ -38,6 +41,17 @@ abstract class CoreItem(private val internalName: String, val material: Material
         it.itemMeta = meta
     }
 
+    fun getMenuItem(): ItemStack = ItemStack(material).also {
+        it.ensureMeta()
+
+        val meta = it.itemMeta!!
+        meta.setDisplayName(getDisplayName().color)
+        meta.lore = getLore().color as MutableList<String>
+        meta.setCustomModelData(modelData)
+
+        it.itemMeta = meta
+    }
+
     abstract fun getDisplayName(): String
     open fun getLore(): MutableList<String> = mutableListOf()
 
@@ -46,7 +60,7 @@ abstract class CoreItem(private val internalName: String, val material: Material
     open fun getRecipe(): CoreRecipe? = null
 }
 
-abstract class DurableCoreItem(internalName: String, material: Material, modelData: Int, private val maxDurability: Int) : CoreItem(internalName, material, modelData) {
+abstract class DurableCoreItem(internalName: String, coreItemType: CoreItemType, material: Material, modelData: Int, private val maxDurability: Int) : CoreItem(internalName, coreItemType, material, modelData) {
     companion object {
         @JvmStatic
         val DURABILITY_KEY = Core.keyOf("durability")

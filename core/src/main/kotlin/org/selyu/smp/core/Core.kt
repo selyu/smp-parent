@@ -2,11 +2,13 @@ package org.selyu.smp.core
 
 import co.aikar.commands.MessageType
 import co.aikar.commands.PaperCommandManager
+import me.idriz.oss.menu.Menu
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bukkit.ChatColor
 import org.bukkit.NamespacedKey
 import org.bukkit.plugin.java.JavaPlugin
 import org.selyu.smp.core.command.BalanceCommand
+import org.selyu.smp.core.command.RecipesCommand
 import org.selyu.smp.core.command.resolver.ProfileContextResolver
 import org.selyu.smp.core.data.Repository
 import org.selyu.smp.core.data.mongo.MongoRepository
@@ -39,6 +41,7 @@ class Core : JavaPlugin() {
 
     override fun onLoad() {
         Settings.init(dataFolder)
+        Menu.init(this)
     }
 
     override fun onEnable() {
@@ -61,6 +64,7 @@ class Core : JavaPlugin() {
         commandManager.commandContexts.registerContext(Profile::class.java, ProfileContextResolver(profileManager, repository))
 
         commandManager.registerCommand(BalanceCommand(profileManager, repository))
+        commandManager.registerCommand(RecipesCommand(coreItemManager))
 
         registerListeners(
                 ProfileListener(profileManager),

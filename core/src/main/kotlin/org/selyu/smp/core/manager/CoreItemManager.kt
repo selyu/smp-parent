@@ -1,11 +1,15 @@
 package org.selyu.smp.core.manager
 
+import net.md_5.bungee.api.ChatColor
 import org.bukkit.event.Event
 import org.bukkit.inventory.ItemStack
 import org.selyu.smp.core.item.CoreItem
+import org.selyu.smp.core.item.CoreItemType
 import org.selyu.smp.core.item.DurableCoreItem
 import org.selyu.smp.core.item.ItemEventHandler
 import org.selyu.smp.core.item.impl.DiamondShearsItem
+import org.selyu.smp.core.util.ensureMeta
+import org.selyu.smp.core.util.plus
 import java.lang.reflect.Method
 
 class CoreItemManager {
@@ -21,6 +25,20 @@ class CoreItemManager {
             if (it.parent.material == itemStack.type && it.parent.modelData == itemStack.itemMeta!!.customModelData && it.parent.validate(itemStack))
                 it.method.invoke(it.parent, event)
         }
+    }
+
+    fun getMenuItemForType(coreItemType: CoreItemType): ItemStack {
+        val item = items.firstOrNull { it.coreItemType == coreItemType }
+                ?: throw NullPointerException("No items with type $coreItemType")
+        val itemStack = ItemStack(item.material)
+        itemStack.ensureMeta()
+
+        val meta = itemStack.itemMeta!!
+        meta.setDisplayName(ChatColor.RESET + coreItemType.correctName)
+        meta.setCustomModelData(item.modelData)
+
+        itemStack.itemMeta = meta
+        return itemStack
     }
 
     private fun wrap(coreItems: List<CoreItem>): Map<Class<*>, MutableSet<SubscribedMethod>> {
