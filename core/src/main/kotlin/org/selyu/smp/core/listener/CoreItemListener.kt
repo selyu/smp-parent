@@ -8,10 +8,12 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerShearEntityEvent
 import org.bukkit.inventory.ItemStack
-import org.selyu.smp.core.manager.CoreItemManager
+import org.selyu.smp.core.Core
 import org.selyu.smp.core.util.isCustomItem
 
-class CoreItemListener(private val coreItemManager: CoreItemManager) : Listener {
+class CoreItemListener : Listener {
+    private val coreItemManager = Core.instance.coreItemManager
+
     @EventHandler(priority = EventPriority.HIGHEST)
     fun onInteract(event: PlayerInteractEvent) {
         if (event.useInteractedBlock() == Event.Result.DENY || !isPossibleItem(event.item))

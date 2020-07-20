@@ -1,6 +1,5 @@
 package org.selyu.smp.core.item
 
-import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Sound

@@ -25,9 +25,9 @@ import org.selyu.ui.UserInterfaceProvider
 import java.util.*
 
 class Core : JavaPlugin() {
-    private lateinit var userInterfaceProvider: UserInterfaceProvider
-    private lateinit var repository: Repository
-    private lateinit var profileManager: ProfileManager
+    lateinit var userInterfaceProvider: UserInterfaceProvider
+    lateinit var repository: Repository
+    lateinit var profileManager: ProfileManager
     lateinit var coreItemManager: CoreItemManager
     private lateinit var commandManager: PaperCommandManager
     private lateinit var inventoryManager: InventoryManager
@@ -52,7 +52,7 @@ class Core : JavaPlugin() {
         audienceProvider = BukkitAudiences.create(this)
         userInterfaceProvider = UserInterfaceProvider(this, 1)
         repository = MongoRepository()
-        profileManager = ProfileManager(this, repository)
+        profileManager = ProfileManager()
         coreItemManager = CoreItemManager()
         commandManager = PaperCommandManager(this)
         inventoryManager = InventoryManager(this)
@@ -67,15 +67,15 @@ class Core : JavaPlugin() {
         commandManager.setFormat(MessageType.INFO, ChatColor.AQUA)
         commandManager.setFormat(MessageType.HELP, ChatColor.YELLOW)
 
-        commandManager.commandContexts.registerContext(Profile::class.java, ProfileContextResolver(profileManager, repository))
+        commandManager.commandContexts.registerContext(Profile::class.java, ProfileContextResolver())
 
-        commandManager.registerCommand(BalanceCommand(profileManager, repository))
+        commandManager.registerCommand(BalanceCommand())
         commandManager.registerCommand(RecipesCommand())
 
         registerListeners(
-                ProfileListener(profileManager),
-                ScoreboardListener(userInterfaceProvider),
-                CoreItemListener(coreItemManager)
+                ProfileListener(),
+                ScoreboardListener(),
+                CoreItemListener()
         )
 
         server.onlinePlayers.forEach {
