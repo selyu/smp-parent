@@ -13,9 +13,11 @@ class CoreRecipe(private val coreItem: CoreItem) {
 
     fun test(playerInventory: PlayerInventory): Boolean {
         val unmatchedKeys = keys
+        val updatedItems = hashMapOf<Int, ItemStack?>()
+
         for (i in playerInventory.contents.indices) {
             val itemStack: ItemStack? = playerInventory.getItem(i)
-            if(itemStack == null || itemStack.type == Material.AIR)
+            if (itemStack == null || itemStack.type == Material.AIR)
                 continue
 
             unmatchedKeys.forEach { key ->
@@ -23,10 +25,13 @@ class CoreRecipe(private val coreItem: CoreItem) {
                     unmatchedKeys.remove(key)
 
                     itemStack.amount -= key.amount
-                    playerInventory.setItem(i, if(itemStack.amount <= 0) null else itemStack)
+                    updatedItems[i] = if (itemStack.amount <= 0) null else itemStack
                 }
             }
         }
+
+        if (unmatchedKeys.isEmpty())
+            updatedItems.forEach { (idx, item) -> playerInventory.setItem(idx, item) }
 
         return unmatchedKeys.isEmpty()
     }
