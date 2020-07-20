@@ -5,12 +5,13 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.selyu.smp.core.Core
 import org.selyu.smp.core.Errors
-import org.selyu.smp.core.data.Repository
 import org.selyu.smp.core.profile.Profile
 import org.selyu.smp.core.profile.ProfileFactory
 import java.util.*
 
-class ProfileManager(private val core: Core, private val repository: Repository) {
+class ProfileManager {
+    private val core = Core.instance
+    private val repository = Core.instance.repository
     private val cache = mutableMapOf<UUID, Profile>()
 
     fun login(event: AsyncPlayerPreLoginEvent) {
