@@ -7,23 +7,23 @@ import org.bukkit.persistence.PersistentDataType
 import java.util.function.Predicate
 
 class CoreRecipe(private val coreItem: CoreItem) {
-    private val keys = mutableSetOf<RecipeKey>()
+    val keys = mutableSetOf<RecipeKey>()
 
     fun addKey(recipeKey: RecipeKey) = keys.add(recipeKey)
 
     fun test(playerInventory: PlayerInventory): Boolean {
         val unmatchedKeys = keys
-        playerInventory.contents.forEach { itemStack ->
-            if (unmatchedKeys.isEmpty())
-                return true
+        for (i in playerInventory.contents.indices) {
+            val itemStack: ItemStack? = playerInventory.getItem(i)
+            if(itemStack == null || itemStack.type == Material.AIR)
+                continue
 
             unmatchedKeys.forEach { key ->
                 if (key.test(itemStack)) {
                     unmatchedKeys.remove(key)
 
                     itemStack.amount -= key.amount
-                    if (itemStack.amount <= 0)
-                        itemStack.type = Material.AIR
+                    playerInventory.setItem(i, if(itemStack.amount <= 0) null else itemStack)
                 }
             }
         }
@@ -34,14 +34,14 @@ class CoreRecipe(private val coreItem: CoreItem) {
     fun getFinalItem(): ItemStack = coreItem.getItem().clone()
 }
 
-open class RecipeKey(val amount: Int = 1) : Predicate<ItemStack> {
+open class RecipeKey(val amount: Int = 1, val needed: String) : Predicate<ItemStack> {
     override fun test(t: ItemStack): Boolean = t.amount >= amount
 }
 
-class InternalNameRecipeKey(private val internalName: String, amount: Int = 1) : RecipeKey(amount) {
+class InternalNameRecipeKey(private val internalName: String, amount: Int = 1) : RecipeKey(amount, internalName) {
     override fun test(t: ItemStack): Boolean = super.test(t) && t.hasItemMeta() && internalName == t.itemMeta!!.persistentDataContainer.get(CoreItem.INTERNAL_NAME_KEY, PersistentDataType.STRING)
 }
 
-class MaterialRecipeKey(private val material: Material, amount: Int = 1) : RecipeKey(amount) {
+class MaterialRecipeKey(private val material: Material, amount: Int = 1) : RecipeKey(amount, material.name) {
     override fun test(t: ItemStack): Boolean = super.test(t) && t.type == material
 }

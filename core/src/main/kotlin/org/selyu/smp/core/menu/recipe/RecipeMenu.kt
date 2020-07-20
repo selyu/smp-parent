@@ -12,6 +12,7 @@ import org.selyu.smp.core.menu.backItemStack
 import org.selyu.smp.core.menu.nextPageItemStack
 import org.selyu.smp.core.menu.placeholderItem
 import org.selyu.smp.core.menu.prevPageItemStack
+import org.selyu.smp.core.util.color
 
 class RecipeMenu : InventoryProvider {
     private val coreItemManager = Core.instance.coreItemManager
@@ -65,8 +66,21 @@ class RecipeMenu : InventoryProvider {
             contents.fill(placeholderItem)
 
             val pagination = contents.pagination()
-            val itemsArray = coreItemManager.getItemsForType(coreItemType).map { coreItem ->
-                ClickableItem.empty(coreItem.getMenuItem())
+            val itemsArray = coreItemManager.getCraftableItemsForType(coreItemType).map { coreItem ->
+                val itemStack = coreItem.getMenuItem()
+                val itemMeta = itemStack.itemMeta!!
+                val recipe = coreItem.getRecipe()!!
+                val lore = mutableListOf<String>()
+                recipe.keys.forEach {
+                    lore.add("&f${it.amount}x ${it.needed}".color)
+                }
+
+                itemMeta.lore = lore
+                itemStack.itemMeta = itemMeta
+                ClickableItem.of(itemStack) {
+                    if (recipe.test(it.whoClicked.inventory))
+                        it.whoClicked.inventory.addItem(recipe.getFinalItem())
+                }
             }.toTypedArray()
             pagination.setItems(*itemsArray)
             pagination.setItemsPerPage(7)

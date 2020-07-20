@@ -13,7 +13,7 @@ import org.selyu.smp.core.util.plus
 import java.lang.reflect.Method
 
 class CoreItemManager {
-    private val items = listOf(
+    private val items: List<CoreItem> = listOf(
             DiamondShearsItem()
     )
 
@@ -41,7 +41,9 @@ class CoreItemManager {
         return itemStack
     }
 
-    fun getItemsForType(coreItemType: CoreItemType): List<CoreItem> = items.filter { it.coreItemType == coreItemType }
+    fun getCraftableItemsForType(coreItemType: CoreItemType): List<CoreItem> = items
+            .filter { it.getRecipe() != null }
+            .filter { it.coreItemType == coreItemType }
 
     private fun wrap(coreItems: List<CoreItem>): Map<Class<*>, MutableSet<SubscribedMethod>> {
         val map = hashMapOf<Class<*>, MutableSet<SubscribedMethod>>()
