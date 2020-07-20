@@ -13,7 +13,7 @@ class CoreRecipe(private val coreItem: CoreItem) {
 
     fun test(playerInventory: PlayerInventory): Boolean {
         val unmatchedKeys = keys
-        val updatedItems = hashMapOf<Int, ItemStack?>()
+        val updatedItems = hashMapOf<Int, ItemStack>()
 
         for (i in playerInventory.contents.indices) {
             val itemStack: ItemStack? = playerInventory.getItem(i)
@@ -25,7 +25,7 @@ class CoreRecipe(private val coreItem: CoreItem) {
                     unmatchedKeys.remove(key)
 
                     itemStack.amount -= key.amount
-                    updatedItems[i] = if (itemStack.amount <= 0) null else itemStack
+                    updatedItems[i] = itemStack
                 }
             }
         }
