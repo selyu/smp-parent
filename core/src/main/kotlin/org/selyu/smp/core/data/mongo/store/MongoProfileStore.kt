@@ -27,16 +27,16 @@ class MongoProfileStore(private val collection: MongoCollection<Document>) : Pro
     }
 
     override fun save(value: Profile): CompletableFuture<Profile> = supplyAsync {
-        val document = Document("_id", value.uniqueId)
+        val document = Document("_id", value.uuid)
         document.append("username", value.username)
         document.append("balance", value.balance)
 
-        collection.replaceOne(eq("_id", value.uniqueId), document, replaceOptions)
+        collection.replaceOne(eq("_id", value.uuid), document, replaceOptions)
         return@supplyAsync value
     }
 
     override fun delete(value: Profile): CompletableFuture<Void> = runAsync {
-        collection.deleteOne(eq("_id", value.uniqueId))
+        collection.deleteOne(eq("_id", value.uuid))
     }
 
     private fun deserialize(document: Document?): Profile? {

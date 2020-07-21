@@ -30,7 +30,7 @@ class ProfileManager {
         val profile = cache[event.player.uniqueId] ?: return
 
         repository.profileStore.save(profile).thenRun {
-            cache.remove(profile.uniqueId)
+            cache.remove(profile.uuid)
         }
     }
 
