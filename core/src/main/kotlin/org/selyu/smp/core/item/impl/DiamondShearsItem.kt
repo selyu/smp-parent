@@ -7,7 +7,7 @@ import org.selyu.smp.core.item.DurableCoreItem
 import org.selyu.smp.core.item.MaterialRecipeKey
 
 class DiamondShearsItem : DurableCoreItem("diamond_shears", CoreItemType.SHEARS, Material.SHEARS, 1, 1487) {
-    override fun getDisplayName(): String = "Diamond Shears"
+    override fun getDisplayName(): String = "&fDiamond Shears"
     override fun getLore(): MutableList<String> = mutableListOf("&7&oEspecially durable!")
 
     override fun getRecipe() = CoreRecipe(this).also {

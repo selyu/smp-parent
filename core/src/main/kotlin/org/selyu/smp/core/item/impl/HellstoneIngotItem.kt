@@ -7,7 +7,7 @@ import org.selyu.smp.core.item.CoreRecipe
 import org.selyu.smp.core.item.MaterialRecipeKey
 
 class HellstoneIngotItem : CoreItem("hellstone_ingot", CoreItemType.INGOT, Material.PAPER, 1) {
-    override fun getDisplayName(): String = "Hellstone Ingot"
+    override fun getDisplayName(): String = "&fHellstone Ingot"
     override fun getLore(): MutableList<String> = mutableListOf("&c&oForged from fiery depths...")
 
     override fun getRecipe(): CoreRecipe? = CoreRecipe(this).also {

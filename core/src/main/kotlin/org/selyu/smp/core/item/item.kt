@@ -18,7 +18,8 @@ import java.util.concurrent.ThreadLocalRandom
 
 enum class CoreItemType(val correctName: String) {
     SHEARS("Shears"),
-    INGOT("Ingots")
+    INGOT("Ingots"),
+    PICKAXE("Pickaxes")
 }
 
 abstract class CoreItem(private val internalName: String, val coreItemType: CoreItemType, val material: Material, val modelData: Int) {
