@@ -3,18 +3,21 @@ package org.selyu.smp.core.item;
 import org.jetbrains.annotations.NotNull;
 
 public enum CustomItemType {
-    SHEARS("Shears"),
-    INGOT("Ingots"),
-    PICKAXE("Pickaxes");
+    // INGOTS
+    HELLSTONE_INGOT(CustomItemCategory.INGOT),
+    // PICKAXES
+    HELLSTONE_PICKAXE(CustomItemCategory.PICKAXE),
+    // SHEARS
+    DIAMOND_SHEARS(CustomItemCategory.SHEARS);
 
-    private final String correctName;
+    private final CustomItemCategory customItemCategory;
 
-    CustomItemType(@NotNull String correctName) {
-        this.correctName = correctName;
+    CustomItemType(@NotNull CustomItemCategory customItemCategory) {
+        this.customItemCategory = customItemCategory;
     }
 
     @NotNull
-    public String getCorrectName() {
-        return correctName;
+    public CustomItemCategory getCustomItemCategory() {
+        return customItemCategory;
     }
 }

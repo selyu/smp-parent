@@ -23,8 +23,8 @@ public abstract class DurableCustomItem extends CustomItem {
 
     private final int maxDurability;
 
-    public DurableCustomItem(@NotNull String internalName, @NotNull CustomItemType customItemType, @NotNull Material material, int modelData, int maxDurability) {
-        super(internalName, customItemType, material, modelData);
+    public DurableCustomItem(@NotNull CustomItemType customItemType, @NotNull Material material, int modelData, int maxDurability) {
+        super(customItemType, material, modelData);
         this.maxDurability = maxDurability;
     }
 

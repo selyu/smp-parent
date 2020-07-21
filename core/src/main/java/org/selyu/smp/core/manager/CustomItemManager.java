@@ -1,10 +1,14 @@
 package org.selyu.smp.core.manager;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
+import org.selyu.smp.core.Core;
 import org.selyu.smp.core.item.CustomItem;
+import org.selyu.smp.core.item.CustomItemCategory;
 import org.selyu.smp.core.item.CustomItemType;
 import org.selyu.smp.core.item.DurableCustomItem;
 import org.selyu.smp.core.item.annotation.ItemEventHandler;
@@ -19,7 +23,7 @@ import java.util.stream.Collectors;
 
 import static org.selyu.smp.core.util.BukkitUtil.ensureMeta;
 
-public final class CoreItemManager {
+public final class CustomItemManager {
     private final List<CustomItem> items = Arrays.asList(
             new DiamondShearsItem(),
             new HellstoneIngotItem(),
@@ -27,6 +31,15 @@ public final class CoreItemManager {
     );
 
     private final Map<Class<?>, Set<SubscribedMethod>> subscribersMap = wrap(items);
+
+    public void addRecipes() {
+        for (CustomItem item : items) {
+            if (item.getRecipe() != null) {
+                Recipe bukkitRecipe = item.getRecipe().toBukkitRecipe();
+                Core.getInstance().getServer().addRecipe(bukkitRecipe);
+            }
+        }
+    }
 
     @SuppressWarnings("ConstantConditions")
     public void runEvent(@NotNull Event event, @NotNull ItemStack itemStack) {
@@ -48,15 +61,29 @@ public final class CoreItemManager {
     }
 
     @NotNull
-    public ItemStack getMenuItemForType(@NotNull CustomItemType customItemType) {
+    public CustomItem getItemByType(@NotNull CustomItemType customItemType) {
+        return items
+                .stream()
+                .filter(coreItem -> coreItem.getCustomItemType() == customItemType)
+                .findFirst()
+                .orElseThrow(() -> new NullPointerException("No core item with type " + customItemType));
+    }
+
+    @NotNull
+    public Material getMaterialByType(@NotNull CustomItemType customItemType) {
+        return getItemByType(customItemType).getMaterial();
+    }
+
+    @NotNull
+    public ItemStack getMenuItemByType(@NotNull CustomItemCategory customItemCategory) {
         var coreItem = items
                 .stream()
-                .filter(item -> item.getCustomItemType() == customItemType)
+                .filter(item -> item.getCustomItemType().getCustomItemCategory() == customItemCategory)
                 .findFirst()
-                .orElseThrow(() -> new NullPointerException("No items with type " + customItemType));
+                .orElseThrow(() -> new NullPointerException("No items with type " + customItemCategory));
         var itemStack = new ItemStack(coreItem.getMaterial());
         var itemMeta = ensureMeta(itemStack);
-        itemMeta.setDisplayName(ChatColor.RESET + customItemType.getCorrectName());
+        itemMeta.setDisplayName(ChatColor.RESET + customItemCategory.getCorrectName());
         itemMeta.setCustomModelData(coreItem.getModelData());
 
         itemStack.setItemMeta(itemMeta);
@@ -64,11 +91,11 @@ public final class CoreItemManager {
     }
 
     @NotNull
-    public List<CustomItem> getCraftableItemsForType(CustomItemType customItemType) {
+    public List<CustomItem> getCraftableItemsByCategory(CustomItemCategory customItemCategory) {
         return items
                 .stream()
                 .filter(coreItem -> coreItem.getRecipe() != null)
-                .filter(coreItem -> coreItem.getCustomItemType() == customItemType)
+                .filter(coreItem -> coreItem.getCustomItemType().getCustomItemCategory() == customItemCategory)
                 .collect(Collectors.toList());
     }
 

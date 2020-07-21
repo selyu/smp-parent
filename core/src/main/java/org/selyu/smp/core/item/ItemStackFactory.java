@@ -46,9 +46,9 @@ class ItemStackFactory {
 
     @NotNull
     public static List<String> addDurabilityLore(@NotNull DurableCustomItem durableCoreItem, int durability) {
-        List<String> lore = durableCoreItem.getLore();
-        lore.add("");
-        lore.add(String.format("&fDurability: %s / %s", durability, durableCoreItem.getMaxDurability()));
-        return color(lore);
+//        List<String> lore = durableCoreItem.getLore();
+//        lore.add("");
+//        lore.add(String.format("&fDurability: %s / %s", durability, durableCoreItem.getMaxDurability()));
+        return color(durableCoreItem.getLore());
     }
 }

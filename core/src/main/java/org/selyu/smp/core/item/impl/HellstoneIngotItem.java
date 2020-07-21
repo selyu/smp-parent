@@ -5,11 +5,11 @@ import org.jetbrains.annotations.NotNull;
 import org.selyu.smp.core.item.CustomItem;
 import org.selyu.smp.core.item.CustomItemType;
 import org.selyu.smp.core.item.recipe.Recipe;
-import org.selyu.smp.core.item.recipe.key.impl.MaterialRecipeKey;
+import org.selyu.smp.core.item.recipe.ShapedRecipe;
 
 public final class HellstoneIngotItem extends CustomItem {
     public HellstoneIngotItem() {
-        super("hellstone_ingot", CustomItemType.INGOT, Material.PAPER, 1);
+        super(CustomItemType.HELLSTONE_INGOT, Material.PAPER, 1);
     }
 
     @NotNull
@@ -20,9 +20,14 @@ public final class HellstoneIngotItem extends CustomItem {
 
     @Override
     public @NotNull Recipe getRecipe() {
-        var recipe = new Recipe(this);
-        recipe.addKey(new MaterialRecipeKey(Material.MAGMA_BLOCK, 8));
-        recipe.addKey(new MaterialRecipeKey(Material.IRON_INGOT, 1));
+        var recipe = new ShapedRecipe(this);
+        recipe.setShape(
+                'm', 'm', 'm',
+                'm', 'i', 'm',
+                'm', 'm', 'm'
+        );
+        recipe.setIngredient('m', Material.MAGMA_BLOCK);
+        recipe.setIngredient('i', Material.IRON_INGOT);
         return recipe;
     }
 }
