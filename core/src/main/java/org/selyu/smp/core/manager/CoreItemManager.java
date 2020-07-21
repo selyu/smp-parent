@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.selyu.smp.core.item.CoreItem;
 import org.selyu.smp.core.item.CoreItemType;
 import org.selyu.smp.core.item.DurableCoreItem;
-import org.selyu.smp.core.item.ItemEventHandler;
+import org.selyu.smp.core.item.annotation.ItemEventHandler;
 import org.selyu.smp.core.item.impl.DiamondShearsItem;
 import org.selyu.smp.core.item.impl.HellstoneIngotItem;
 import org.selyu.smp.core.item.impl.HellstonePickaxeItem;
