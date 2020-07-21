@@ -10,6 +10,6 @@ import org.selyu.smp.core.menu.recipe.RecipeMenu;
 public final class RecipesCommand extends BaseCommand {
     @Default
     public void onDefault(Player sender) {
-        RecipeMenu.open(sender);
+        RecipeMenu.INSTANCE.open(sender);
     }
 }
