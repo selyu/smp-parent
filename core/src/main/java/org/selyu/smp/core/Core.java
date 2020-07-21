@@ -4,7 +4,6 @@ import co.aikar.commands.MessageType;
 import co.aikar.commands.PaperCommandManager;
 import fr.minuskube.inv.InventoryManager;
 import fr.minuskube.inv.SmartInventory;
-import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
@@ -30,7 +29,6 @@ import java.util.Locale;
 
 public final class Core extends JavaPlugin {
     private static Core instance;
-    public static BukkitAudiences audienceProvider;
 
     private UserInterfaceProvider userInterfaceProvider;
     private Repository repository;
@@ -38,6 +36,7 @@ public final class Core extends JavaPlugin {
     private CoreItemManager coreItemManager;
     private PaperCommandManager paperCommandManager;
     private InventoryManager inventoryManager;
+    private BukkitAudiences bukkitAudiences;
 
     public static Core getInstance() {
         return instance;
@@ -61,6 +60,8 @@ public final class Core extends JavaPlugin {
         coreItemManager = new CoreItemManager();
         paperCommandManager = new PaperCommandManager(this);
         inventoryManager = new InventoryManager(this);
+        bukkitAudiences = BukkitAudiences.create(this);
+
         inventoryManager.init();
 
         paperCommandManager.getLocales().addMessageBundle("acf-locale", Locale.US);
@@ -84,6 +85,11 @@ public final class Core extends JavaPlugin {
         for (Player onlinePlayer : getServer().getOnlinePlayers()) {
             onlinePlayer.kickPlayer(Errors.CORE_LOADED);
         }
+    }
+
+    @Override
+    public void onDisable() {
+        repository.closeConnections();
     }
 
     private void registerListeners(@NotNull Listener... listeners) {
@@ -116,8 +122,12 @@ public final class Core extends JavaPlugin {
         return inventoryManager;
     }
 
+    public BukkitAudiences getBukkitAudiences() {
+        return bukkitAudiences;
+    }
+
     public SmartInventory.Builder buildInventory() {
-        // TODO: Implement
-        return null;
+        return SmartInventory.builder()
+                .manager(inventoryManager);
     }
 }

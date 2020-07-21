@@ -29,22 +29,22 @@ fun String.rainbow(): String {
 
 fun CommandSender.success(text: String) {
     val component = "<color:${if (this is Player) "#00C851" else "green"}><bold>!!</bold> $text".asComponent
-    Core.audienceProvider.audience(this).sendMessage(component)
+    Core.getInstance().bukkitAudiences.audience(this).sendMessage(component)
 }
 
 fun CommandSender.info(text: String) {
     val component = "<color:${if (this is Player) "#33b5e5" else "aqua"}><bold>!!</bold> $text".asComponent
-    Core.audienceProvider.audience(this).sendMessage(component)
+    Core.getInstance().bukkitAudiences.audience(this).sendMessage(component)
 }
 
 fun CommandSender.warning(text: String) {
     val component = "<color:${if (this is Player) "#FFbb33" else "yellow"}><bold>!!</bold> $text".asComponent
-    Core.audienceProvider.audience(this).sendMessage(component)
+    Core.getInstance().bukkitAudiences.audience(this).sendMessage(component)
 }
 
 fun CommandSender.error(text: String) {
     val component = "<color:${if (this is Player) "#ff4444" else "red"}><bold>!!</bold> $text".asComponent
-    Core.audienceProvider.audience(this).sendMessage(component)
+    Core.getInstance().bukkitAudiences.audience(this).sendMessage(component)
 }
 
 val String.asComponent: Component
