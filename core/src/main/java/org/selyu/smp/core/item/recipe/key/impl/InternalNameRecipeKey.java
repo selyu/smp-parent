@@ -19,8 +19,9 @@ public final class InternalNameRecipeKey extends RecipeKey {
         this.internalName = internalName;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public boolean test(@NotNull ItemStack itemStack) {
-        return super.test(itemStack) && internalName.equals(itemStack.getItemMeta().getPersistentDataContainer().get(CoreItem.getINTERNAL_NAME_KEY(), PersistentDataType.STRING));
+        return super.test(itemStack) && internalName.equals(itemStack.getItemMeta().getPersistentDataContainer().get(CoreItem.INTERNAL_NAME_KEY, PersistentDataType.STRING));
     }
 }

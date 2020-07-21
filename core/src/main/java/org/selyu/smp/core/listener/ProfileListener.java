@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.selyu.smp.core.util.MessageUtil.warning;
+
 public final class ProfileListener implements Listener {
     private final ProfileManager profileManager = Core.getInstance().getProfileManager();
     private final UserInterfaceProvider userInterfaceProvider = Core.getInstance().getUserInterfaceProvider();
@@ -37,7 +39,7 @@ public final class ProfileListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         if (event.getPlayer().hasPermission("core.debug"))
-            event.getPlayer().sendMessage(String.format("Your profile took %sms to load!", loginTimes.get(event.getPlayer().getUniqueId())));
+            warning(event.getPlayer(), String.format("Your profile took %sms to load!", loginTimes.get(event.getPlayer().getUniqueId())));
         loginTimes.remove(event.getPlayer().getUniqueId());
 
         userInterfaceProvider.setBoard(event.getPlayer(), scoreboardAdapter);
