@@ -3,8 +3,8 @@ package org.selyu.smp.core.item.impl
 import org.bukkit.Material
 import org.selyu.smp.core.item.CoreItem
 import org.selyu.smp.core.item.CoreItemType
-import org.selyu.smp.core.item.CoreRecipe
-import org.selyu.smp.core.item.MaterialRecipeKey
+import org.selyu.smp.core.item.recipe.CoreRecipe
+import org.selyu.smp.core.item.recipe.key.impl.MaterialRecipeKey
 
 class HellstoneIngotItem : CoreItem("hellstone_ingot", CoreItemType.INGOT, Material.PAPER, 1) {
     override fun getDisplayName(): String = "&fHellstone Ingot"

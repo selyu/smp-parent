@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.selyu.smp.core.Core;
 import org.selyu.smp.core.item.CoreItemType;
-import org.selyu.smp.core.item.RecipeKey;
+import org.selyu.smp.core.item.recipe.key.RecipeKey;
 import org.selyu.smp.core.manager.CoreItemManager;
 import org.selyu.smp.core.menu.Menus;
 
@@ -55,7 +55,7 @@ public final class ChooseRecipeMenu implements InventoryProvider {
                     itemStack.setItemMeta(itemMeta);
 
                     return ClickableItem.of(itemStack, (inventoryClickEvent -> {
-                        if (inventoryClickEvent.isLeftClick() && recipe.test(inventoryClickEvent.getWhoClicked().getInventory()))
+                        if (inventoryClickEvent.isLeftClick() && recipe.canCraft(inventoryClickEvent.getWhoClicked().getInventory()))
                             inventoryClickEvent.getWhoClicked().getInventory().addItem(recipe.getFinalItem());
                     }));
                 }).toArray(ClickableItem[]::new);

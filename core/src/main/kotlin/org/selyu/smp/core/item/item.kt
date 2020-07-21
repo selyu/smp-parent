@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.selyu.smp.core.Core
+import org.selyu.smp.core.item.recipe.CoreRecipe
 import org.selyu.smp.core.util.color
 import org.selyu.smp.core.util.ensureMeta
 import java.util.concurrent.ThreadLocalRandom
