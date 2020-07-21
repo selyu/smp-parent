@@ -57,8 +57,6 @@ public final class ShapedRecipe implements Recipe {
                 return false;
             }
         }
-
-        System.out.println("true");
         return true;
     }
 
@@ -109,7 +107,7 @@ public final class ShapedRecipe implements Recipe {
         return bukkitRecipe;
     }
 
-    @NotNull
+    @Nullable
     public Object[] getMatrix() {
         if (matrix == null) {
             var newMatrix = new Object[9];
