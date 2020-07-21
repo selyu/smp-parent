@@ -17,13 +17,10 @@ public final class Menus {
     private Menus() {
     }
 
-    @SuppressWarnings("ConstantConditions")
     @NotNull
     private static ItemStack buildMenuItem(Material material, String displayName) {
         var itemStack = new ItemStack(material);
-        ensureMeta(itemStack);
-
-        var itemMeta = itemStack.getItemMeta();
+        var itemMeta = ensureMeta(itemStack);
         itemMeta.setDisplayName(color(displayName));
 
         itemStack.setItemMeta(itemMeta);

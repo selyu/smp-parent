@@ -43,13 +43,10 @@ public abstract class CoreItem {
         return CoreItemStackFactory.create(this);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @NotNull
     public final ItemStack getMenuItem() {
         var itemStack = new ItemStack(material);
-        ensureMeta(itemStack);
-
-        var itemMeta = itemStack.getItemMeta();
+        var itemMeta = ensureMeta(itemStack);
         if (!getDisplayName().isBlank())
             itemMeta.setDisplayName(color(getDisplayName()));
         itemMeta.setCustomModelData(modelData);

@@ -47,7 +47,6 @@ public final class CoreItemManager {
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     @NotNull
     public ItemStack getMenuItemForType(@NotNull CoreItemType coreItemType) {
         var coreItem = items
@@ -56,9 +55,7 @@ public final class CoreItemManager {
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException("No items with type " + coreItemType));
         var itemStack = new ItemStack(coreItem.getMaterial());
-        ensureMeta(itemStack);
-
-        var itemMeta = itemStack.getItemMeta();
+        var itemMeta = ensureMeta(itemStack);
         itemMeta.setDisplayName(ChatColor.RESET + coreItemType.getCorrectName());
         itemMeta.setCustomModelData(coreItem.getModelData());
 

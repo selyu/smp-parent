@@ -14,13 +14,10 @@ class CoreItemStackFactory {
     private CoreItemStackFactory() {
     }
 
-    @SuppressWarnings("ConstantConditions")
     @NotNull
     public static ItemStack create(@NotNull CoreItem coreItem) {
         var itemStack = new ItemStack(coreItem.getMaterial());
-        ensureMeta(itemStack);
-
-        var itemMeta = itemStack.getItemMeta();
+        var itemMeta = ensureMeta(itemStack);
         if (!coreItem.getDisplayName().isBlank())
             itemMeta.setDisplayName(color(coreItem.getDisplayName()));
         if (!coreItem.getLore().isEmpty())
@@ -33,11 +30,10 @@ class CoreItemStackFactory {
         return itemStack;
     }
 
-    @SuppressWarnings("ConstantConditions")
     @NotNull
     public static ItemStack createDurable(@NotNull DurableCoreItem durableCoreItem) {
         var itemStack = create(durableCoreItem);
-        var itemMeta = itemStack.getItemMeta();
+        var itemMeta = ensureMeta(itemStack);
         itemMeta.setUnbreakable(true);
 
         itemMeta.setLore(addDurabilityLore(durableCoreItem, durableCoreItem.getMaxDurability()));
