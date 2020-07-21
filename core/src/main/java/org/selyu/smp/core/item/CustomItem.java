@@ -58,10 +58,6 @@ public abstract class CustomItem {
         return itemStack;
     }
 
-    public boolean validate(@NotNull ItemStack itemStack) {
-        return true;
-    }
-
     public boolean matches(@NotNull ItemStack itemStack) {
         if (!isCustomItem(itemStack))
             return false;

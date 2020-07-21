@@ -49,8 +49,7 @@ public final class CustomItemManager {
 
         for (SubscribedMethod subscriber : subscribers) {
             if (subscriber.parent.getMaterial() == itemStack.getType() &&
-                    subscriber.parent.getModelData() == itemStack.getItemMeta().getCustomModelData() &&
-                    subscriber.parent.validate(itemStack)) {
+                    subscriber.parent.getModelData() == itemStack.getItemMeta().getCustomModelData()) {
                 try {
                     subscriber.method.invoke(subscriber.parent, event);
                 } catch (IllegalAccessException | InvocationTargetException e) {
