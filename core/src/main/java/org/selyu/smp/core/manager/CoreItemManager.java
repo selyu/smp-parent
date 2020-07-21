@@ -4,9 +4,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.selyu.smp.core.item.CoreItem;
-import org.selyu.smp.core.item.CoreItemType;
-import org.selyu.smp.core.item.DurableCoreItem;
+import org.selyu.smp.core.item.CustomItem;
+import org.selyu.smp.core.item.CustomItemType;
+import org.selyu.smp.core.item.DurableCustomItem;
 import org.selyu.smp.core.item.annotation.ItemEventHandler;
 import org.selyu.smp.core.item.impl.DiamondShearsItem;
 import org.selyu.smp.core.item.impl.HellstoneIngotItem;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 import static org.selyu.smp.core.util.BukkitUtil.ensureMeta;
 
 public final class CoreItemManager {
-    private final List<CoreItem> items = Arrays.asList(
+    private final List<CustomItem> items = Arrays.asList(
             new DiamondShearsItem(),
             new HellstoneIngotItem(),
             new HellstonePickaxeItem()
@@ -48,15 +48,15 @@ public final class CoreItemManager {
     }
 
     @NotNull
-    public ItemStack getMenuItemForType(@NotNull CoreItemType coreItemType) {
+    public ItemStack getMenuItemForType(@NotNull CustomItemType customItemType) {
         var coreItem = items
                 .stream()
-                .filter(item -> item.getCoreItemType() == coreItemType)
+                .filter(item -> item.getCustomItemType() == customItemType)
                 .findFirst()
-                .orElseThrow(() -> new NullPointerException("No items with type " + coreItemType));
+                .orElseThrow(() -> new NullPointerException("No items with type " + customItemType));
         var itemStack = new ItemStack(coreItem.getMaterial());
         var itemMeta = ensureMeta(itemStack);
-        itemMeta.setDisplayName(ChatColor.RESET + coreItemType.getCorrectName());
+        itemMeta.setDisplayName(ChatColor.RESET + customItemType.getCorrectName());
         itemMeta.setCustomModelData(coreItem.getModelData());
 
         itemStack.setItemMeta(itemMeta);
@@ -64,27 +64,27 @@ public final class CoreItemManager {
     }
 
     @NotNull
-    public List<CoreItem> getCraftableItemsForType(CoreItemType coreItemType) {
+    public List<CustomItem> getCraftableItemsForType(CustomItemType customItemType) {
         return items
                 .stream()
                 .filter(coreItem -> coreItem.getRecipe() != null)
-                .filter(coreItem -> coreItem.getCoreItemType() == coreItemType)
+                .filter(coreItem -> coreItem.getCustomItemType() == customItemType)
                 .collect(Collectors.toList());
     }
 
     @NotNull
-    private Map<Class<?>, Set<SubscribedMethod>> wrap(@NotNull List<CoreItem> items) {
+    private Map<Class<?>, Set<SubscribedMethod>> wrap(@NotNull List<CustomItem> items) {
         var map = new HashMap<Class<?>, Set<SubscribedMethod>>();
-        for (CoreItem item : items) {
+        for (CustomItem item : items) {
             map.putAll(getSubscribedMethods(item, item.getClass().getDeclaredMethods()));
-            if (item instanceof DurableCoreItem)
+            if (item instanceof DurableCustomItem)
                 map.putAll(getSubscribedMethods(item, item.getClass().getSuperclass().getDeclaredMethods()));
         }
         return map;
     }
 
     @NotNull
-    private Map<Class<?>, Set<SubscribedMethod>> getSubscribedMethods(@NotNull CoreItem coreItem, @NotNull Method[] methods) {
+    private Map<Class<?>, Set<SubscribedMethod>> getSubscribedMethods(@NotNull CustomItem customItem, @NotNull Method[] methods) {
         var map = new HashMap<Class<?>, Set<SubscribedMethod>>();
 
         for (Method method : methods) {
@@ -97,7 +97,7 @@ public final class CoreItemManager {
 
             var event = method.getParameterTypes()[0];
             var mapValue = map.getOrDefault(event, new HashSet<>());
-            mapValue.add(new SubscribedMethod(coreItem, method));
+            mapValue.add(new SubscribedMethod(customItem, method));
 
             map.put(event, mapValue);
         }
@@ -106,10 +106,10 @@ public final class CoreItemManager {
     }
 
     private static final class SubscribedMethod {
-        private final CoreItem parent;
+        private final CustomItem parent;
         private final Method method;
 
-        public SubscribedMethod(CoreItem parent, Method method) {
+        public SubscribedMethod(CustomItem parent, Method method) {
             this.parent = parent;
             this.method = method;
         }

@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.selyu.smp.core.Core;
-import org.selyu.smp.core.item.recipe.CoreRecipe;
+import org.selyu.smp.core.item.recipe.Recipe;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,17 +15,17 @@ import java.util.List;
 import static co.aikar.commands.ACFBukkitUtil.color;
 import static org.selyu.smp.core.util.BukkitUtil.ensureMeta;
 
-public abstract class CoreItem {
+public abstract class CustomItem {
     public static final NamespacedKey INTERNAL_NAME_KEY = Core.keyOf("internal_name");
 
     private final String internalName;
-    private final CoreItemType coreItemType;
+    private final CustomItemType customItemType;
     private final Material material;
     private final int modelData;
 
-    public CoreItem(@NotNull String internalName, @NotNull CoreItemType coreItemType, @NotNull Material material, int modelData) {
+    public CustomItem(@NotNull String internalName, @NotNull CustomItemType customItemType, @NotNull Material material, int modelData) {
         this.internalName = internalName;
-        this.coreItemType = coreItemType;
+        this.customItemType = customItemType;
         this.material = material;
         this.modelData = modelData;
     }
@@ -40,7 +40,7 @@ public abstract class CoreItem {
 
     @NotNull
     public ItemStack getItem() {
-        return CoreItemStackFactory.create(this);
+        return ItemStackFactory.create(this);
     }
 
     @NotNull
@@ -61,7 +61,7 @@ public abstract class CoreItem {
     }
 
     @Nullable
-    public CoreRecipe getRecipe() {
+    public Recipe getRecipe() {
         return null;
     }
 
@@ -71,8 +71,8 @@ public abstract class CoreItem {
     }
 
     @NotNull
-    public final CoreItemType getCoreItemType() {
-        return coreItemType;
+    public final CustomItemType getCustomItemType() {
+        return customItemType;
     }
 
     @NotNull

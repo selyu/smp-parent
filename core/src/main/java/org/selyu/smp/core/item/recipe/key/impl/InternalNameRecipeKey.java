@@ -3,7 +3,7 @@ package org.selyu.smp.core.item.recipe.key.impl;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
-import org.selyu.smp.core.item.CoreItem;
+import org.selyu.smp.core.item.CustomItem;
 import org.selyu.smp.core.item.recipe.key.RecipeKey;
 
 public final class InternalNameRecipeKey extends RecipeKey {
@@ -22,6 +22,6 @@ public final class InternalNameRecipeKey extends RecipeKey {
     @SuppressWarnings("ConstantConditions")
     @Override
     public boolean test(@NotNull ItemStack itemStack) {
-        return super.test(itemStack) && internalName.equals(itemStack.getItemMeta().getPersistentDataContainer().get(CoreItem.INTERNAL_NAME_KEY, PersistentDataType.STRING));
+        return super.test(itemStack) && internalName.equals(itemStack.getItemMeta().getPersistentDataContainer().get(CustomItem.INTERNAL_NAME_KEY, PersistentDataType.STRING));
     }
 }

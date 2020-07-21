@@ -4,19 +4,19 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
-import org.selyu.smp.core.item.CoreItem;
+import org.selyu.smp.core.item.CustomItem;
 import org.selyu.smp.core.item.recipe.key.RecipeKey;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class CoreRecipe {
-    private final CoreItem coreItem;
+public final class Recipe {
+    private final CustomItem customItem;
     private final Set<RecipeKey> keys = new HashSet<>();
 
-    public CoreRecipe(@NotNull CoreItem coreItem) {
-        this.coreItem = coreItem;
+    public Recipe(@NotNull CustomItem customItem) {
+        this.customItem = customItem;
     }
 
     public void addKey(@NotNull RecipeKey recipeKey) {
@@ -54,7 +54,7 @@ public final class CoreRecipe {
 
     @NotNull
     public ItemStack getFinalItem() {
-        return coreItem.getItem().clone();
+        return customItem.getItem().clone();
     }
 
     @NotNull
