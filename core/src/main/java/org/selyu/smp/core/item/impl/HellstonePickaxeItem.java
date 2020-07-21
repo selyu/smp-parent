@@ -2,15 +2,14 @@ package org.selyu.smp.core.item.impl;
 
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
-import org.selyu.smp.core.item.CoreItemType;
-import org.selyu.smp.core.item.DurableCoreItem;
-import org.selyu.smp.core.item.recipe.CoreRecipe;
-import org.selyu.smp.core.item.recipe.key.impl.InternalNameRecipeKey;
-import org.selyu.smp.core.item.recipe.key.impl.MaterialRecipeKey;
+import org.selyu.smp.core.item.CustomItemType;
+import org.selyu.smp.core.item.DurableCustomItem;
+import org.selyu.smp.core.item.recipe.Recipe;
+import org.selyu.smp.core.item.recipe.ShapedRecipe;
 
-public final class HellstonePickaxeItem extends DurableCoreItem {
+public final class HellstonePickaxeItem extends DurableCustomItem {
     public HellstonePickaxeItem() {
-        super("hellstone_pickaxe", CoreItemType.PICKAXE, Material.IRON_PICKAXE, 1, 1000);
+        super(CustomItemType.HELLSTONE_PICKAXE, Material.IRON_PICKAXE, 1, 1000);
     }
 
     @NotNull
@@ -20,10 +19,15 @@ public final class HellstonePickaxeItem extends DurableCoreItem {
     }
 
     @Override
-    public @NotNull CoreRecipe getRecipe() {
-        var recipe = new CoreRecipe(this);
-        recipe.addKey(new InternalNameRecipeKey("hellstone_ingot", 3));
-        recipe.addKey(new MaterialRecipeKey(Material.STICK, 2));
+    public @NotNull Recipe getRecipe() {
+        var recipe = new ShapedRecipe(this);
+        recipe.setShape(
+                'i', 'i', 'i',
+                '_', 's', '_',
+                '_', 's', '_'
+        );
+        recipe.setIngredient('i', CustomItemType.HELLSTONE_INGOT);
+        recipe.setIngredient('s', Material.STICK);
         return recipe;
     }
 }

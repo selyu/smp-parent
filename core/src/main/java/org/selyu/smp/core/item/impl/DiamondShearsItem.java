@@ -2,17 +2,17 @@ package org.selyu.smp.core.item.impl;
 
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
-import org.selyu.smp.core.item.CoreItemType;
-import org.selyu.smp.core.item.DurableCoreItem;
-import org.selyu.smp.core.item.recipe.CoreRecipe;
-import org.selyu.smp.core.item.recipe.key.impl.MaterialRecipeKey;
+import org.selyu.smp.core.item.CustomItemType;
+import org.selyu.smp.core.item.DurableCustomItem;
+import org.selyu.smp.core.item.recipe.Recipe;
+import org.selyu.smp.core.item.recipe.ShapedRecipe;
 
 import java.util.Collections;
 import java.util.List;
 
-public final class DiamondShearsItem extends DurableCoreItem {
+public final class DiamondShearsItem extends DurableCustomItem {
     public DiamondShearsItem() {
-        super("diamond_shears", CoreItemType.SHEARS, Material.SHEARS, 1, 1478);
+        super(CustomItemType.DIAMOND_SHEARS, Material.SHEARS, 1, 1478);
     }
 
     @NotNull
@@ -28,9 +28,14 @@ public final class DiamondShearsItem extends DurableCoreItem {
     }
 
     @Override
-    public @NotNull CoreRecipe getRecipe() {
-        var recipe = new CoreRecipe(this);
-        recipe.addKey(new MaterialRecipeKey(Material.DIAMOND, 2));
+    public @NotNull Recipe getRecipe() {
+        var recipe = new ShapedRecipe(this);
+        recipe.setShape(
+                '_', 'd', '_',
+                'd', '_', '_',
+                '_', '_', '_'
+        );
+        recipe.setIngredient('d', Material.DIAMOND);
         return recipe;
     }
 }

@@ -18,13 +18,13 @@ import org.selyu.smp.core.item.annotation.ItemEventHandler;
 import java.util.concurrent.ThreadLocalRandom;
 
 @SuppressWarnings("ConstantConditions")
-public abstract class DurableCoreItem extends CoreItem {
+public abstract class DurableCustomItem extends CustomItem {
     public static final NamespacedKey DURABILITY_KEY = Core.keyOf("durability");
 
     private final int maxDurability;
 
-    public DurableCoreItem(@NotNull String internalName, @NotNull CoreItemType coreItemType, @NotNull Material material, int modelData, int maxDurability) {
-        super(internalName, coreItemType, material, modelData);
+    public DurableCustomItem(@NotNull CustomItemType customItemType, @NotNull Material material, int modelData, int maxDurability) {
+        super(customItemType, material, modelData);
         this.maxDurability = maxDurability;
     }
 
@@ -43,7 +43,7 @@ public abstract class DurableCoreItem extends CoreItem {
             player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
             player.getEquipment().setItem(equipmentSlot, null);
         } else {
-            itemMeta.setLore(CoreItemStackFactory.addDurabilityLore(this, newDurability));
+            itemMeta.setLore(ItemStackFactory.addDurabilityLore(this, newDurability));
             itemMeta.getPersistentDataContainer().set(DURABILITY_KEY, PersistentDataType.INTEGER, newDurability);
 
             itemStack.setItemMeta(itemMeta);
@@ -62,6 +62,11 @@ public abstract class DurableCoreItem extends CoreItem {
     public void onShear(PlayerShearEntityEvent event) {
         if (event.getPlayer().getGameMode() != GameMode.CREATIVE)
             handleDurability(event.getPlayer(), event.getItem(), event.getHand(), true);
+    }
+
+    @Override
+    public @NotNull ItemStack getItem() {
+        return ItemStackFactory.createDurable(this);
     }
 
     public final int getMaxDurability() {

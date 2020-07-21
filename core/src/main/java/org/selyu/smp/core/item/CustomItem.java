@@ -7,25 +7,27 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.selyu.smp.core.Core;
-import org.selyu.smp.core.item.recipe.CoreRecipe;
+import org.selyu.smp.core.item.recipe.Recipe;
+import org.selyu.smp.core.util.BukkitUtil;
 
 import java.util.Collections;
 import java.util.List;
 
 import static co.aikar.commands.ACFBukkitUtil.color;
 import static org.selyu.smp.core.util.BukkitUtil.ensureMeta;
+import static org.selyu.smp.core.util.BukkitUtil.isCustomItem;
 
-public abstract class CoreItem {
+public abstract class CustomItem {
     public static final NamespacedKey INTERNAL_NAME_KEY = Core.keyOf("internal_name");
 
     private final String internalName;
-    private final CoreItemType coreItemType;
+    private final CustomItemType customItemType;
     private final Material material;
     private final int modelData;
 
-    public CoreItem(@NotNull String internalName, @NotNull CoreItemType coreItemType, @NotNull Material material, int modelData) {
-        this.internalName = internalName;
-        this.coreItemType = coreItemType;
+    public CustomItem(@NotNull CustomItemType customItemType, @NotNull Material material, int modelData) {
+        this.internalName = customItemType.name();
+        this.customItemType = customItemType;
         this.material = material;
         this.modelData = modelData;
     }
@@ -40,7 +42,7 @@ public abstract class CoreItem {
 
     @NotNull
     public ItemStack getItem() {
-        return CoreItemStackFactory.create(this);
+        return ItemStackFactory.create(this);
     }
 
     @NotNull
@@ -56,12 +58,18 @@ public abstract class CoreItem {
         return itemStack;
     }
 
-    public boolean validate(@NotNull ItemStack itemStack) {
-        return true;
+    public boolean matches(@NotNull ItemStack itemStack) {
+        if (!isCustomItem(itemStack))
+            return false;
+        var itemMeta = itemStack.getItemMeta();
+        if(itemMeta == null)
+            return false;
+
+        return material.equals(itemStack.getType()) && itemMeta.hasCustomModelData() && modelData == itemMeta.getCustomModelData() && customItemType.equals(BukkitUtil.getCustomItemType(itemStack));
     }
 
     @Nullable
-    public CoreRecipe getRecipe() {
+    public Recipe getRecipe() {
         return null;
     }
 
@@ -71,8 +79,8 @@ public abstract class CoreItem {
     }
 
     @NotNull
-    public final CoreItemType getCoreItemType() {
-        return coreItemType;
+    public final CustomItemType getCustomItemType() {
+        return customItemType;
     }
 
     @NotNull

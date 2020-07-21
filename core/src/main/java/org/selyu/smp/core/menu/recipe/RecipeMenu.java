@@ -7,8 +7,8 @@ import fr.minuskube.inv.content.InventoryProvider;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.selyu.smp.core.Core;
-import org.selyu.smp.core.item.CoreItemType;
-import org.selyu.smp.core.manager.CoreItemManager;
+import org.selyu.smp.core.item.CustomItemCategory;
+import org.selyu.smp.core.manager.CustomItemManager;
 import org.selyu.smp.core.menu.Menus;
 
 public final class RecipeMenu implements InventoryProvider {
@@ -19,13 +19,13 @@ public final class RecipeMenu implements InventoryProvider {
             .title("Recipe Book")
             .build();
 
-    private final CoreItemManager coreItemManager = Core.getInstance().getCoreItemManager();
+    private final CustomItemManager customItemManager = Core.getInstance().getCustomItemManager();
 
     @Override
     public void init(Player player, InventoryContents inventoryContents) {
         inventoryContents.fill(Menus.PLACEHOLDER_ITEM);
-        for (int i = 0; i < CoreItemType.values().length; i++) {
-            inventoryContents.set(1, i + 1, clickableItemForType(CoreItemType.values()[i]));
+        for (int i = 0; i < CustomItemCategory.values().length; i++) {
+            inventoryContents.set(1, i + 1, clickableItemForType(CustomItemCategory.values()[i]));
         }
     }
 
@@ -34,9 +34,9 @@ public final class RecipeMenu implements InventoryProvider {
     }
 
     @NotNull
-    private ClickableItem clickableItemForType(@NotNull CoreItemType coreItemType) {
-        return ClickableItem.of(coreItemManager.getMenuItemForType(coreItemType), (event) -> {
-            ChooseRecipeMenu.open(coreItemType, (Player) event.getWhoClicked(), 0);
+    private ClickableItem clickableItemForType(@NotNull CustomItemCategory customItemCategory) {
+        return ClickableItem.of(customItemManager.getMenuItemByType(customItemCategory), (event) -> {
+            ChooseRecipeMenu.open(customItemCategory, (Player) event.getWhoClicked(), 0);
         });
     }
 }

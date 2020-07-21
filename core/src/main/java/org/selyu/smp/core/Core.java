@@ -18,7 +18,7 @@ import org.selyu.smp.core.data.Repository;
 import org.selyu.smp.core.data.impl.MongoRepository;
 import org.selyu.smp.core.listener.CustomItemListener;
 import org.selyu.smp.core.listener.ProfileListener;
-import org.selyu.smp.core.manager.CoreItemManager;
+import org.selyu.smp.core.manager.CustomItemManager;
 import org.selyu.smp.core.manager.ProfileManager;
 import org.selyu.smp.core.profile.Profile;
 import org.selyu.smp.core.settings.Settings;
@@ -33,7 +33,7 @@ public final class Core extends JavaPlugin {
     private UserInterfaceProvider userInterfaceProvider;
     private Repository repository;
     private ProfileManager profileManager;
-    private CoreItemManager coreItemManager;
+    private CustomItemManager customItemManager;
     private PaperCommandManager paperCommandManager;
     private InventoryManager inventoryManager;
     private BukkitAudiences bukkitAudiences;
@@ -57,11 +57,12 @@ public final class Core extends JavaPlugin {
         userInterfaceProvider = new UserInterfaceProvider(this, 1);
         repository = new MongoRepository();
         profileManager = new ProfileManager();
-        coreItemManager = new CoreItemManager();
+        customItemManager = new CustomItemManager();
         paperCommandManager = new PaperCommandManager(this);
         inventoryManager = new InventoryManager(this);
         bukkitAudiences = BukkitAudiences.create(this);
 
+        customItemManager.addRecipes();
         inventoryManager.init();
 
         paperCommandManager.getLocales().addMessageBundle("acf-locale", Locale.US);
@@ -113,8 +114,8 @@ public final class Core extends JavaPlugin {
         return profileManager;
     }
 
-    public CoreItemManager getCoreItemManager() {
-        return coreItemManager;
+    public CustomItemManager getCustomItemManager() {
+        return customItemManager;
     }
 
     public PaperCommandManager getPaperCommandManager() {
