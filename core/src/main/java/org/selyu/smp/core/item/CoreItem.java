@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static co.aikar.commands.ACFBukkitUtil.color;
-import static org.selyu.smp.core.util.BukkitKt.ensureMeta;
+import static org.selyu.smp.core.util.BukkitUtil.ensureMeta;
 
 public abstract class CoreItem {
     public static final NamespacedKey INTERNAL_NAME_KEY = Core.keyOf("internal_name");

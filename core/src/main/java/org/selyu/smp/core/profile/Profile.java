@@ -55,7 +55,7 @@ public final class Profile {
     }
 
     public boolean removeBalance(double amount) {
-        if(balance < amount)
+        if (balance < amount)
             return false;
         balance -= amount;
         return true;

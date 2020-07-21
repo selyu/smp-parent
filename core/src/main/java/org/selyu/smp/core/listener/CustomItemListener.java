@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import org.selyu.smp.core.Core;
 import org.selyu.smp.core.manager.CoreItemManager;
 
-import static org.selyu.smp.core.util.BukkitKt.isCustomItem;
+import static org.selyu.smp.core.util.BukkitUtil.isCustomItem;
 
 public final class CustomItemListener implements Listener {
     private final CoreItemManager coreItemManager = Core.getInstance().getCoreItemManager();

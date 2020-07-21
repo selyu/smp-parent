@@ -29,14 +29,14 @@ public final class CoreRecipe {
 
         for (int i = 0; i < playerInventory.getContents().length; i++) {
             var itemStack = playerInventory.getItem(i);
-            if(itemStack == null || itemStack.getType() == Material.AIR)
+            if (itemStack == null || itemStack.getType() == Material.AIR)
                 continue;
 
             for (RecipeKey key : keys) {
-                if(matchedKeys.contains(key))
+                if (matchedKeys.contains(key))
                     continue;
 
-                if(key.test(itemStack)) {
+                if (key.test(itemStack)) {
                     var newItemStack = itemStack.clone();
                     newItemStack.setAmount(newItemStack.getAmount() - key.getAmount());
 
@@ -46,7 +46,7 @@ public final class CoreRecipe {
             }
         }
 
-        if(matchedKeys.size() == keys.size())
+        if (matchedKeys.size() == keys.size())
             updatedItems.forEach(playerInventory::setItem);
 
         return matchedKeys.size() == keys.size();

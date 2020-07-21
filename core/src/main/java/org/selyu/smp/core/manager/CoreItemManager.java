@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.selyu.smp.core.util.BukkitKt.ensureMeta;
+import static org.selyu.smp.core.util.BukkitUtil.ensureMeta;
 
 public final class CoreItemManager {
     private final List<CoreItem> items = Arrays.asList(

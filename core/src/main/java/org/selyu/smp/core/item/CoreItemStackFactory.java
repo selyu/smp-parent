@@ -7,14 +7,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static co.aikar.commands.ACFBukkitUtil.color;
-import static org.selyu.smp.core.util.BukkitKt.ensureMeta;
+import static org.selyu.smp.core.util.BukkitUtil.ensureMeta;
+import static org.selyu.smp.core.util.MessageUtil.color;
 
 class CoreItemStackFactory {
     private CoreItemStackFactory() {
     }
 
-    // TODO: Color
     @SuppressWarnings("ConstantConditions")
     @NotNull
     public static ItemStack create(@NotNull CoreItem coreItem) {
@@ -25,7 +24,7 @@ class CoreItemStackFactory {
         if (!coreItem.getDisplayName().isBlank())
             itemMeta.setDisplayName(color(coreItem.getDisplayName()));
         if (!coreItem.getLore().isEmpty())
-            itemMeta.setLore(coreItem.getLore());
+            itemMeta.setLore(color(coreItem.getLore()));
         itemMeta.setCustomModelData(coreItem.getModelData());
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemMeta.getPersistentDataContainer().set(CoreItem.INTERNAL_NAME_KEY, PersistentDataType.STRING, coreItem.getInternalName());
@@ -53,7 +52,7 @@ class CoreItemStackFactory {
     public static List<String> addDurabilityLore(@NotNull DurableCoreItem durableCoreItem, int durability) {
         List<String> lore = durableCoreItem.getLore();
         lore.add("");
-        lore.add(color(String.format("&fDurability: %s / %s", durability, durableCoreItem.getMaxDurability())));
-        return lore;
+        lore.add(String.format("&fDurability: %s / %s", durability, durableCoreItem.getMaxDurability()));
+        return color(lore);
     }
 }

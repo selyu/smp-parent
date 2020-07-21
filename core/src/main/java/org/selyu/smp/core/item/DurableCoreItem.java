@@ -36,10 +36,10 @@ public abstract class DurableCoreItem extends CoreItem {
 
         var random = ThreadLocalRandom.current().nextInt(1, 100);
         var newDurability = itemMeta.getPersistentDataContainer().getOrDefault(DURABILITY_KEY, PersistentDataType.INTEGER, maxDurability);
-        if(random > chanceToNegate)
+        if (random > chanceToNegate)
             newDurability--;
 
-        if(newDurability == -1) {
+        if (newDurability == -1) {
             player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
             player.getEquipment().setItem(equipmentSlot, null);
         } else {
@@ -47,7 +47,7 @@ public abstract class DurableCoreItem extends CoreItem {
             itemMeta.getPersistentDataContainer().set(DURABILITY_KEY, PersistentDataType.INTEGER, newDurability);
 
             itemStack.setItemMeta(itemMeta);
-            if(setItemInSlot)
+            if (setItemInSlot)
                 player.getEquipment().setItem(equipmentSlot, itemStack);
         }
     }

@@ -7,7 +7,7 @@ import org.selyu.ui.scoreboard.title.ScoreboardTitle;
 
 import java.util.List;
 
-import static org.selyu.smp.core.util.MessagesKt.rainbow;
+import static org.selyu.smp.core.util.MessageUtil.rainbow;
 
 public final class CoreScoreboardAdapter implements ScoreboardAdapter {
     @Override

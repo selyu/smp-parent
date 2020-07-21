@@ -11,7 +11,7 @@ import org.selyu.smp.core.data.Repository;
 import org.selyu.smp.core.manager.ProfileManager;
 import org.selyu.smp.core.profile.Profile;
 
-import static org.selyu.smp.core.util.MessagesKt.*;
+import static org.selyu.smp.core.util.MessageUtil.*;
 
 @CommandAlias("balance|bal|shekels")
 public final class BalanceCommand extends BaseCommand {
