@@ -7,7 +7,7 @@ import com.mongodb.client.MongoClients;
 import org.bson.UuidRepresentation;
 import org.jetbrains.annotations.NotNull;
 import org.selyu.smp.core.data.Repository;
-import org.selyu.smp.core.data.mongo.store.MongoProfileStore;
+import org.selyu.smp.core.data.impl.store.MongoProfileStore;
 import org.selyu.smp.core.data.store.ProfileStore;
 import org.selyu.smp.core.settings.Settings;
 
