@@ -13,7 +13,7 @@ class ProfileContextResolver : ContextResolver<Profile, BukkitCommandExecutionCo
 
     override fun getContext(c: BukkitCommandExecutionContext): Profile {
         val username = c.popFirstArg()
-        val fromCache = profileManager.getProfileByUsername(username)
+        val fromCache = profileManager.getByUsername(username)
         return if (fromCache.isPresent) {
             fromCache.get()
         } else {

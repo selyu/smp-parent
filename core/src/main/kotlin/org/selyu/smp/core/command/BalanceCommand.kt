@@ -28,7 +28,7 @@ class BalanceCommand : BaseCommand() {
                 throw InvalidCommandArgument(true)
             }
             else -> {
-                profileManager.getProfile((sender as Player).uniqueId).ifPresent {
+                profileManager.getByUUID((sender as Player).uniqueId).ifPresent {
                     sender.info("You have ${it.balance} shekels!")
                 }
             }
