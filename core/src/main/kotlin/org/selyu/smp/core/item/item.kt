@@ -37,6 +37,7 @@ abstract class CoreItem(private val internalName: String, val coreItemType: Core
         if (lore.isNotEmpty())
             meta.lore = lore.toMutableList()
         meta.setCustomModelData(modelData)
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
         meta.persistentDataContainer.set(INTERNAL_NAME_KEY, PersistentDataType.STRING, internalName)
 
         it.itemMeta = meta
@@ -48,6 +49,7 @@ abstract class CoreItem(private val internalName: String, val coreItemType: Core
         val meta = it.itemMeta!!
         meta.setDisplayName(getDisplayName().color)
         meta.setCustomModelData(modelData)
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
 
         it.itemMeta = meta
     }
