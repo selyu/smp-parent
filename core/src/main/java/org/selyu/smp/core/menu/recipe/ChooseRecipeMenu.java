@@ -66,7 +66,7 @@ public final class ChooseRecipeMenu implements InventoryProvider {
 
         inventoryContents.set(2, 3, ClickableItem.of(Menus.PREV_PAGE_ITEM_STACK, (event -> open(coreItemType, player, pagination.previous().getPage()))));
         inventoryContents.set(2, 5, ClickableItem.of(Menus.NEXT_PAGE_ITEM_STACK, (event -> open(coreItemType, player, pagination.next().getPage()))));
-        inventoryContents.set(2, 3, ClickableItem.of(Menus.BACK_ITEM_STACK, (event -> RecipeMenu.INSTANCE.open(player))));
+        inventoryContents.set(2, 4, ClickableItem.of(Menus.BACK_ITEM_STACK, (event -> RecipeMenu.INSTANCE.open(player))));
     }
 
     @Override
