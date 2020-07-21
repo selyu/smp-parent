@@ -16,9 +16,8 @@ import org.selyu.smp.core.command.RecipesCommand;
 import org.selyu.smp.core.command.resolver.ProfileContextResolver;
 import org.selyu.smp.core.data.Repository;
 import org.selyu.smp.core.data.impl.MongoRepository;
-import org.selyu.smp.core.listener.CoreItemListener;
+import org.selyu.smp.core.listener.CustomItemListener;
 import org.selyu.smp.core.listener.ProfileListener;
-import org.selyu.smp.core.listener.ScoreboardListener;
 import org.selyu.smp.core.manager.CoreItemManager;
 import org.selyu.smp.core.manager.ProfileManager;
 import org.selyu.smp.core.profile.Profile;
@@ -79,8 +78,7 @@ public final class Core extends JavaPlugin {
 
         registerListeners(
                 new ProfileListener(),
-                new ScoreboardListener(),
-                new CoreItemListener()
+                new CustomItemListener()
         );
 
         for (Player onlinePlayer : getServer().getOnlinePlayers()) {
