@@ -8,8 +8,8 @@ import org.selyu.smp.core.Core
 import org.selyu.smp.core.profile.Profile
 
 class ProfileContextResolver : ContextResolver<Profile, BukkitCommandExecutionContext> {
-    private val profileManager = Core.instance.profileManager
-    private val repository = Core.instance.repository
+    private val profileManager = Core.getInstance().profileManager
+    private val repository = Core.getInstance().repository
 
     override fun getContext(c: BukkitCommandExecutionContext): Profile {
         val username = c.popFirstArg()

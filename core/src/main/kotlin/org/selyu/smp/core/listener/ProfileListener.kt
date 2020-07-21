@@ -11,7 +11,7 @@ import org.selyu.smp.core.util.warning
 import java.util.*
 
 class ProfileListener : Listener {
-    private val profileManager = Core.instance.profileManager
+    private val profileManager = Core.getInstance().profileManager
     private val loginTimes = hashMapOf<UUID, Long>()
 
     @EventHandler

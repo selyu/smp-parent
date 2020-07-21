@@ -10,8 +10,8 @@ import org.selyu.smp.core.profile.ProfileFactory
 import java.util.*
 
 class ProfileManager {
-    private val core = Core.instance
-    private val repository = Core.instance.repository
+    private val core = Core.getInstance()
+    private val repository = Core.getInstance().repository
     private val cache = mutableMapOf<UUID, Profile>()
 
     fun login(event: AsyncPlayerPreLoginEvent) {

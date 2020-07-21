@@ -15,10 +15,10 @@ import org.selyu.smp.core.menu.prevPageItemStack
 import org.selyu.smp.core.util.color
 
 class RecipeMenu : InventoryProvider {
-    private val coreItemManager = Core.instance.coreItemManager
+    private val coreItemManager = Core.getInstance().coreItemManager
 
     companion object {
-        private val inv: SmartInventory = Core.instance.buildInventory()
+        private val inv: SmartInventory = Core.getInstance().buildInventory()
                 .provider(RecipeMenu())
                 .id("recipeMenu")
                 .size(3, 9)
@@ -45,12 +45,12 @@ class RecipeMenu : InventoryProvider {
     }
 
     private class RecipeChooseMenu(private val coreItemType: CoreItemType) : InventoryProvider {
-        private val coreItemManager = Core.instance.coreItemManager
+        private val coreItemManager = Core.getInstance().coreItemManager
 
         companion object {
             @JvmStatic
             fun open(coreItemType: CoreItemType, player: Player, page: Int = 0) {
-                Core.instance.buildInventory()
+                Core.getInstance().buildInventory()
                         .provider(RecipeChooseMenu(coreItemType))
                         .id("recipeChooseMenu")
                         .size(3, 9)

@@ -12,7 +12,7 @@ import org.selyu.smp.core.Core
 import org.selyu.smp.core.util.isCustomItem
 
 class CoreItemListener : Listener {
-    private val coreItemManager = Core.instance.coreItemManager
+    private val coreItemManager = Core.getInstance().coreItemManager
 
     @EventHandler(priority = EventPriority.HIGHEST)
     fun onInteract(event: PlayerInteractEvent) {

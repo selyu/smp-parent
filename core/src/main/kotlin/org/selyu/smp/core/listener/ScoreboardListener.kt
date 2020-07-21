@@ -7,7 +7,7 @@ import org.selyu.smp.core.Core
 import org.selyu.smp.core.scoreboard.CoreScoreboardAdapter
 
 class ScoreboardListener : Listener {
-    private val userInterfaceProvider = Core.instance.userInterfaceProvider
+    private val userInterfaceProvider = Core.getInstance().userInterfaceProvider
 
     companion object {
         private val scoreboardAdapter: CoreScoreboardAdapter = CoreScoreboardAdapter()

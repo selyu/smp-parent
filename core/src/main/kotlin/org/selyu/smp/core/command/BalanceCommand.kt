@@ -14,8 +14,8 @@ import org.selyu.smp.core.util.success
 
 @CommandAlias("balance|bal|shekels")
 class BalanceCommand : BaseCommand() {
-    private val profileManager = Core.instance.profileManager
-    private val repository = Core.instance.repository
+    private val profileManager = Core.getInstance().profileManager
+    private val repository = Core.getInstance().repository
 
     @Default
     @Syntax("[player]")
