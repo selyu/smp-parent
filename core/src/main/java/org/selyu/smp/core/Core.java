@@ -15,7 +15,7 @@ import org.selyu.smp.core.command.BalanceCommand;
 import org.selyu.smp.core.command.RecipesCommand;
 import org.selyu.smp.core.command.resolver.ProfileContextResolver;
 import org.selyu.smp.core.data.Repository;
-import org.selyu.smp.core.data.mongo.MongoRepository;
+import org.selyu.smp.core.data.impl.MongoRepository;
 import org.selyu.smp.core.listener.CoreItemListener;
 import org.selyu.smp.core.listener.ProfileListener;
 import org.selyu.smp.core.listener.ScoreboardListener;
@@ -25,6 +25,7 @@ import org.selyu.smp.core.profile.Profile;
 import org.selyu.smp.core.settings.Settings;
 import org.selyu.ui.UserInterfaceProvider;
 
+import java.io.IOException;
 import java.util.Locale;
 
 public final class Core extends JavaPlugin {
@@ -89,7 +90,11 @@ public final class Core extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        repository.closeConnections();
+        try {
+            repository.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void registerListeners(@NotNull Listener... listeners) {
