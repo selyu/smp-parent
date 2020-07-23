@@ -38,15 +38,14 @@ public final class ShapedRecipe implements Recipe {
         charLookupMap.put(c, customItemType);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public boolean validCraftingMatrix(@Nullable ItemStack[] craftingMatrix) {
         Object[] matrix = getMatrix();
         for (int i = 0; i < 9; i++) {
             Object object = matrix[i];
             if (object instanceof Material) {
                 var material = (Material) object;
-                if (isCustomItem(craftingMatrix[i]))
-                    return false;
-                if (craftingMatrix[i] == null || !craftingMatrix[i].getType().equals(material))
+                if (isCustomItem(craftingMatrix[i]) || craftingMatrix[i] == null || !craftingMatrix[i].getType().equals(material))
                     return false;
             } else if (object instanceof CustomItemType) {
                 var customItemType = (CustomItemType) object;
@@ -71,7 +70,7 @@ public final class ShapedRecipe implements Recipe {
         if (bukkitRecipe == null) {
             var newBukkitRecipe = new org.bukkit.inventory.ShapedRecipe(Core.keyOf(customItem.getCustomItemType().name()), getFinalItem());
             var bukkitShape = new String[3];
-            StringBuilder row = new StringBuilder();
+            var row = new StringBuilder();
             var rowIndex = 0;
 
             for (int i = 0; i < shape.length; i++) {

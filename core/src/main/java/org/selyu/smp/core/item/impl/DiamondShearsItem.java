@@ -7,7 +7,7 @@ import org.selyu.smp.core.item.DurableCustomItem;
 import org.selyu.smp.core.item.recipe.Recipe;
 import org.selyu.smp.core.item.recipe.ShapedRecipe;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 public final class DiamondShearsItem extends DurableCustomItem {
@@ -24,7 +24,8 @@ public final class DiamondShearsItem extends DurableCustomItem {
     @NotNull
     @Override
     public List<String> getLore() {
-        return Collections.singletonList("&7&oEspecially durable!");
+        //noinspection ArraysAsListWithZeroOrOneArgument
+        return Arrays.asList("&7&oEspecially durable!");
     }
 
     @Override

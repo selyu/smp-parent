@@ -17,7 +17,9 @@ import org.selyu.smp.core.item.annotation.ItemEventHandler;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-@SuppressWarnings("ConstantConditions")
+import static java.util.Objects.requireNonNull;
+import static org.selyu.smp.core.util.BukkitUtil.ensureMeta;
+
 public abstract class DurableCustomItem extends CustomItem {
     public static final NamespacedKey DURABILITY_KEY = Core.keyOf("durability");
 
@@ -29,7 +31,10 @@ public abstract class DurableCustomItem extends CustomItem {
     }
 
     private void handleDurability(Player player, ItemStack itemStack, EquipmentSlot equipmentSlot, boolean setItemInSlot) {
-        var itemMeta = itemStack.getItemMeta();
+        if (player.getEquipment() == null)
+            throw new NullPointerException("player equipment shouldn't be null?");
+
+        var itemMeta = ensureMeta(itemStack);
         var chanceToNegate = 0;
         if (itemMeta.hasEnchant(Enchantment.DURABILITY))
             chanceToNegate = 100 / (itemMeta.getEnchantLevel(Enchantment.DURABILITY) + 1);
@@ -55,7 +60,7 @@ public abstract class DurableCustomItem extends CustomItem {
     @ItemEventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if (event.getPlayer().getGameMode() != GameMode.CREATIVE)
-            handleDurability(event.getPlayer(), event.getPlayer().getEquipment().getItemInMainHand(), EquipmentSlot.HAND, false);
+            handleDurability(event.getPlayer(), requireNonNull(event.getPlayer().getEquipment()).getItemInMainHand(), EquipmentSlot.HAND, false);
     }
 
     @ItemEventHandler

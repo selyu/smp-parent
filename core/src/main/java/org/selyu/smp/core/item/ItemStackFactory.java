@@ -31,14 +31,14 @@ class ItemStackFactory {
     }
 
     @NotNull
-    public static ItemStack createDurable(@NotNull DurableCustomItem durableCoreItem) {
-        var itemStack = create(durableCoreItem);
+    public static ItemStack createDurable(@NotNull DurableCustomItem durableCustomItem) {
+        var itemStack = create(durableCustomItem);
         var itemMeta = ensureMeta(itemStack);
         itemMeta.setUnbreakable(true);
 
-        itemMeta.setLore(addDurabilityLore(durableCoreItem, durableCoreItem.getMaxDurability()));
+        itemMeta.setLore(addDurabilityLore(durableCustomItem, durableCustomItem.getMaxDurability()));
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES);
-        itemMeta.getPersistentDataContainer().set(DurableCustomItem.DURABILITY_KEY, PersistentDataType.INTEGER, durableCoreItem.getMaxDurability());
+        itemMeta.getPersistentDataContainer().set(DurableCustomItem.DURABILITY_KEY, PersistentDataType.INTEGER, durableCustomItem.getMaxDurability());
 
         itemStack.setItemMeta(itemMeta);
         return itemStack;
@@ -46,9 +46,9 @@ class ItemStackFactory {
 
     @NotNull
     public static List<String> addDurabilityLore(@NotNull DurableCustomItem durableCoreItem, int durability) {
-//        List<String> lore = durableCoreItem.getLore();
-//        lore.add("");
-//        lore.add(String.format("&fDurability: %s / %s", durability, durableCoreItem.getMaxDurability()));
+        List<String> lore = durableCoreItem.getLore();
+        lore.add("");
+        lore.add(String.format("&fDurability: %s / %s", durability, durableCoreItem.getMaxDurability()));
         return color(durableCoreItem.getLore());
     }
 }
