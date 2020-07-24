@@ -16,6 +16,7 @@ import org.selyu.smp.core.item.annotation.ItemEventHandler;
 import org.selyu.smp.core.item.impl.DiamondShearsItem;
 import org.selyu.smp.core.item.impl.HellstoneIngotItem;
 import org.selyu.smp.core.item.impl.HellstonePickaxeItem;
+import org.selyu.smp.core.item.impl.HellstoneShovelItem;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -33,7 +34,8 @@ public final class CustomItemManager {
     private final List<CustomItem> items = Arrays.asList(
             new DiamondShearsItem(),
             new HellstoneIngotItem(),
-            new HellstonePickaxeItem()
+            new HellstonePickaxeItem(),
+            new HellstoneShovelItem()
     );
 
     private final Map<Class<?>, List<SubscribedMethod>> subscribersMap = wrap(items);

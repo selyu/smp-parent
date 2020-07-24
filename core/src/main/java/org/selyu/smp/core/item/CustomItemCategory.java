@@ -5,7 +5,8 @@ import org.jetbrains.annotations.NotNull;
 public enum CustomItemCategory {
     SHEARS("Shears"),
     INGOT("Ingots"),
-    PICKAXE("Pickaxes");
+    PICKAXE("Pickaxes"),
+    SHOVEL("Shovels");
 
     private final String correctName;
 

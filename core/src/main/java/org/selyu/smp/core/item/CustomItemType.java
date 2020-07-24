@@ -3,12 +3,14 @@ package org.selyu.smp.core.item;
 import org.jetbrains.annotations.NotNull;
 
 public enum CustomItemType {
-    // INGOTS
+    // DIAMOND
+    DIAMOND_SHEARS(CustomItemCategory.SHEARS),
+
+    // HELLSTONE
     HELLSTONE_INGOT(CustomItemCategory.INGOT),
-    // PICKAXES
     HELLSTONE_PICKAXE(CustomItemCategory.PICKAXE),
-    // SHEARS
-    DIAMOND_SHEARS(CustomItemCategory.SHEARS);
+    HELLSTONE_SHOVEL(CustomItemCategory.SHOVEL)
+    ;
 
     private final CustomItemCategory customItemCategory;
 
