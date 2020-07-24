@@ -1,11 +1,11 @@
 package org.selyu.smp.core.manager;
 
-import com.google.common.collect.Lists;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.selyu.smp.core.Core;
 import org.selyu.smp.core.item.CustomItem;
@@ -19,10 +19,14 @@ import org.selyu.smp.core.item.impl.HellstonePickaxeItem;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.requireNonNull;
 import static org.selyu.smp.core.util.BukkitUtil.ensureMeta;
 
 public final class CustomItemManager {
@@ -38,23 +42,21 @@ public final class CustomItemManager {
         for (CustomItem item : items) {
             if (item.getRecipe() == null)
                 continue;
+
             Recipe bukkitRecipe = item.getRecipe().toBukkitRecipe();
             Core.getInstance().getServer().addRecipe(bukkitRecipe);
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     public void runEvent(@NotNull Event event, @NotNull ItemStack itemStack) {
         var subscribers = subscribersMap.get(event.getClass());
         if (subscribers == null)
             return;
 
-        List<SubscribedMethod> subscribedMethods = Lists.newArrayList(subscribers);
-        subscribedMethods.sort((o1, o2) -> o2.priority - o1.priority);
-
-        for (SubscribedMethod subscriber : subscribedMethods) {
+        subscribers.sort((o1, o2) -> o2.priority - o1.priority);
+        for (SubscribedMethod subscriber : subscribers) {
             if (subscriber.parent.getMaterial() == itemStack.getType() &&
-                    subscriber.parent.getModelData() == itemStack.getItemMeta().getCustomModelData()) {
+                    subscriber.parent.getModelData() == requireNonNull(itemStack.getItemMeta()).getCustomModelData()) {
                 try {
                     subscriber.method.invoke(subscriber.parent, event);
                 } catch (IllegalAccessException | InvocationTargetException e) {
@@ -65,30 +67,28 @@ public final class CustomItemManager {
     }
 
     @NotNull
-    public CustomItem getItemByType(@NotNull CustomItemType customItemType) {
-        return items
-                .stream()
-                .filter(coreItem -> coreItem.getCustomItemType() == customItemType)
-                .findFirst()
-                .orElseThrow(() -> new NullPointerException("No core item with type " + customItemType));
-    }
-
-    @NotNull
     public Material getMaterialByType(@NotNull CustomItemType customItemType) {
         return getItemByType(customItemType).getMaterial();
     }
 
     @NotNull
+    public CustomItem getItemByType(@NotNull CustomItemType customItemType) {
+        return items.stream()
+                .filter(customItem -> customItem.getCustomItemType() == customItemType)
+                .findFirst()
+                .orElseThrow(() -> new NullPointerException("No core item with type " + customItemType));
+    }
+
+    @NotNull
     public ItemStack getMenuItemByType(@NotNull CustomItemCategory customItemCategory) {
-        var coreItem = items
-                .stream()
-                .filter(item -> item.getCustomItemType().getCustomItemCategory() == customItemCategory)
+        var customItem = items.stream()
+                .filter(customItem1 -> customItem1.getCustomItemType().getCustomItemCategory() == customItemCategory)
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException("No items with type " + customItemCategory));
-        var itemStack = new ItemStack(coreItem.getMaterial());
+        var itemStack = new ItemStack(customItem.getMaterial());
         var itemMeta = ensureMeta(itemStack);
         itemMeta.setDisplayName(ChatColor.RESET + customItemCategory.getCorrectName());
-        itemMeta.setCustomModelData(coreItem.getModelData());
+        itemMeta.setCustomModelData(customItem.getModelData());
 
         itemStack.setItemMeta(itemMeta);
         return itemStack;
@@ -96,10 +96,9 @@ public final class CustomItemManager {
 
     @NotNull
     public List<CustomItem> getCraftableItemsByCategory(CustomItemCategory customItemCategory) {
-        return items
-                .stream()
-                .filter(coreItem -> coreItem.getRecipe() != null)
-                .filter(coreItem -> coreItem.getCustomItemType().getCustomItemCategory() == customItemCategory)
+        return items.stream()
+                .filter(customItem -> customItem.getRecipe() != null)
+                .filter(customItem -> customItem.getCustomItemType().getCustomItemCategory() == customItemCategory)
                 .collect(Collectors.toList());
     }
 
@@ -116,17 +115,15 @@ public final class CustomItemManager {
 
     private void addSubscribedMethods(@NotNull CustomItem customItem, @NotNull Map<Class<?>, List<SubscribedMethod>> map, @NotNull Method[] methods) {
         for (Method method : methods) {
-            if (!method.isAnnotationPresent(ItemEventHandler.class) ||
-                    method.getParameterCount() != 1 ||
-                    !Event.class.isAssignableFrom(method.getParameterTypes()[0]) ||
-                    !method.trySetAccessible()) {
+            if (!method.isAnnotationPresent(ItemEventHandler.class) || method.getParameterCount() != 1 || !Event.class.isAssignableFrom(
+                    method.getParameterTypes()[0]) || !method.trySetAccessible())
                 continue;
-            }
+
             var annotation = method.getAnnotation(ItemEventHandler.class);
             var event = method.getParameterTypes()[0];
             var mapValue = map.computeIfAbsent(event, (aClass -> new CopyOnWriteArrayList<>()));
-            mapValue.add(new SubscribedMethod(customItem, method, annotation.priority()));
 
+            mapValue.add(new SubscribedMethod(customItem, method, annotation.priority()));
             map.put(event, mapValue);
         }
     }
@@ -136,14 +133,15 @@ public final class CustomItemManager {
         private final Method method;
         private final int priority;
 
-        public SubscribedMethod(CustomItem parent, Method method, int priority) {
+        public SubscribedMethod(@NotNull CustomItem parent, @NotNull Method method, int priority) {
             this.parent = parent;
             this.method = method;
             this.priority = priority;
         }
 
         @Override
-        public String toString() {
+        @Contract(pure = true)
+        public @NotNull String toString() {
             return "SubscribedMethod{" +
                     "parent=" + parent +
                     ", method=" + method +

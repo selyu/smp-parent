@@ -18,12 +18,12 @@ public final class MessageUtil {
 
     @NotNull
     public static String rainbow(@NotNull String string) {
-        StringBuilder stringBuilder = new StringBuilder();
+        var stringBuilder = new StringBuilder();
         for (int i = 0; i < string.length(); i++) {
             if (string.charAt(i) == ' ') {
                 stringBuilder.append(' ');
             } else {
-                double hue = Math.ceil((System.currentTimeMillis() + (i * 300)) / 20.0);
+                var hue = Math.ceil((System.currentTimeMillis() + (i * 300)) / 20.0);
                 hue %= 360.0d;
 
                 stringBuilder.append(ChatColor.of(Color.getHSBColor(((float) hue / 360.0f), 0.9f, 0.8f)));
@@ -34,22 +34,22 @@ public final class MessageUtil {
     }
 
     public static void success(@NotNull CommandSender sender, @NotNull String string) {
-        Component component = asComponent("<color:" + (sender instanceof Player ? "#00C851" : "green") + "><bold>!!</bold> " + string);
+        var component = asComponent("<color:" + (sender instanceof Player ? "#00C851" : "green") + "><bold>!!</bold> " + string);
         Core.getInstance().getBukkitAudiences().audience(sender).sendMessage(component);
     }
 
     public static void info(@NotNull CommandSender sender, @NotNull String string) {
-        Component component = asComponent("<color:" + (sender instanceof Player ? "#33b5e5" : "aqua") + "><bold>!!</bold> " + string);
+        var component = asComponent("<color:" + (sender instanceof Player ? "#33b5e5" : "aqua") + "><bold>!!</bold> " + string);
         Core.getInstance().getBukkitAudiences().audience(sender).sendMessage(component);
     }
 
     public static void warning(@NotNull CommandSender sender, @NotNull String string) {
-        Component component = asComponent("<color:" + (sender instanceof Player ? "#FFbb33" : "yellow") + "><bold>!!</bold> " + string);
+        var component = asComponent("<color:" + (sender instanceof Player ? "#FFbb33" : "yellow") + "><bold>!!</bold> " + string);
         Core.getInstance().getBukkitAudiences().audience(sender).sendMessage(component);
     }
 
     public static void error(@NotNull CommandSender sender, @NotNull String string) {
-        Component component = asComponent("<color:" + (sender instanceof Player ? "#ff4444" : "red") + "><bold>!!</bold> " + string);
+        var component = asComponent("<color:" + (sender instanceof Player ? "#ff4444" : "red") + "><bold>!!</bold> " + string);
         Core.getInstance().getBukkitAudiences().audience(sender).sendMessage(component);
     }
 

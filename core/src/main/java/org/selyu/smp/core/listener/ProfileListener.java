@@ -40,8 +40,8 @@ public final class ProfileListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         if (event.getPlayer().hasPermission("core.debug"))
             warning(event.getPlayer(), String.format("Your profile took %sms to load!", loginTimes.get(event.getPlayer().getUniqueId())));
-        loginTimes.remove(event.getPlayer().getUniqueId());
 
+        loginTimes.remove(event.getPlayer().getUniqueId());
         userInterfaceProvider.setBoard(event.getPlayer(), scoreboardAdapter);
     }
 

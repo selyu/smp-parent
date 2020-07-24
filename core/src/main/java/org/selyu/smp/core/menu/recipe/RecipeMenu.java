@@ -35,8 +35,6 @@ public final class RecipeMenu implements InventoryProvider {
 
     @NotNull
     private ClickableItem clickableItemForType(@NotNull CustomItemCategory customItemCategory) {
-        return ClickableItem.of(customItemManager.getMenuItemByType(customItemCategory), (event) -> {
-            ChooseRecipeMenu.open(customItemCategory, (Player) event.getWhoClicked(), 0);
-        });
+        return ClickableItem.of(customItemManager.getMenuItemByType(customItemCategory), (event) -> ChooseRecipeMenu.open(customItemCategory, (Player) event.getWhoClicked(), 0));
     }
 }

@@ -33,13 +33,13 @@ public final class Profile {
         return username;
     }
 
+    public void setUsername(@NotNull String username) {
+        this.username = username;
+    }
+
     @NotNull
     public String getProperUsername() {
         return username + (username.endsWith("s") ? "'" : "'s");
-    }
-
-    public void setUsername(@NotNull String username) {
-        this.username = username;
     }
 
     public double getBalance() {

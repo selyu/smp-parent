@@ -51,9 +51,9 @@ public abstract class CustomItem {
         var itemMeta = ensureMeta(itemStack);
         if (!getDisplayName().isBlank())
             itemMeta.setDisplayName(color(getDisplayName()));
+
         itemMeta.setCustomModelData(modelData);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
@@ -61,6 +61,7 @@ public abstract class CustomItem {
     public boolean matches(@NotNull ItemStack itemStack) {
         if (!isCustomItem(itemStack))
             return false;
+
         var itemMeta = itemStack.getItemMeta();
         if (itemMeta == null)
             return false;

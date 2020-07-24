@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import static org.selyu.smp.core.util.BukkitUtil.getCustomItemType;
-import static org.selyu.smp.core.util.BukkitUtil.isCustomItem;
+import static java.util.Objects.requireNonNull;
+import static org.selyu.smp.core.util.BukkitUtil.*;
 import static org.selyu.smp.core.util.MessageUtil.color;
 
 public final class ChooseRecipeMenu implements InventoryProvider {
@@ -44,7 +44,6 @@ public final class ChooseRecipeMenu implements InventoryProvider {
                 .open(player, page);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void init(Player player, InventoryContents inventoryContents) {
         inventoryContents.fill(Menus.PLACEHOLDER_ITEM);
@@ -53,13 +52,13 @@ public final class ChooseRecipeMenu implements InventoryProvider {
         var itemsArray = customItemManager.getCraftableItemsByCategory(customItemCategory)
                 .stream()
                 .map(coreItem -> {
-                    var recipe = coreItem.getRecipe();
+                    var recipe = requireNonNull(coreItem.getRecipe());
                     var itemStack = coreItem.getMenuItem();
-                    var itemMeta = itemStack.getItemMeta();
+                    var itemMeta = ensureMeta(itemStack);
                     var lore = new ArrayList<String>();
-                    Map<Object, Integer> ingredientsWithAmount = getIngredientsWithAmount(recipe);
-                    ingredientsWithAmount.forEach((o, amount) -> lore.add(color(String.format("&f%sx %s", amount, o.toString()))));
+                    var ingredientsWithAmount = getIngredientsWithAmount(recipe);
 
+                    ingredientsWithAmount.forEach((o, amount) -> lore.add(color(String.format("&f%sx %s", amount, o.toString()))));
                     itemMeta.setLore(lore);
                     itemStack.setItemMeta(itemMeta);
 
@@ -85,16 +84,15 @@ public final class ChooseRecipeMenu implements InventoryProvider {
     @NotNull
     private Map<Object, Integer> getIngredientsWithAmount(Recipe recipe) {
         var map = new HashMap<Object, Integer>();
-
         if (recipe instanceof ShapedRecipe) {
             var shapedRecipe = (ShapedRecipe) recipe;
             for (Object object : shapedRecipe.getMatrix()) {
                 if (object == null)
                     continue;
+
                 map.put(object, map.getOrDefault(object, 0) + 1);
             }
         }
-
         return map;
     }
 
@@ -135,6 +133,7 @@ public final class ChooseRecipeMenu implements InventoryProvider {
 
         if (newMap.size() == usedIngredients.size())
             updatedItems.forEach(playerInventory::setItem);
+
         return newMap.size() == usedIngredients.size();
     }
 }

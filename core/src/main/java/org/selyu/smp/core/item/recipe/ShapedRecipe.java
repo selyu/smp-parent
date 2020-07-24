@@ -40,16 +40,18 @@ public final class ShapedRecipe implements Recipe {
 
     @SuppressWarnings("ConstantConditions")
     public boolean validCraftingMatrix(@Nullable ItemStack[] craftingMatrix) {
-        Object[] matrix = getMatrix();
+        var matrix = getMatrix();
         for (int i = 0; i < 9; i++) {
-            Object object = matrix[i];
+            var object = matrix[i];
             if (object instanceof Material) {
                 var material = (Material) object;
+
                 if (isCustomItem(craftingMatrix[i]) || craftingMatrix[i] == null || !craftingMatrix[i].getType().equals(material))
                     return false;
             } else if (object instanceof CustomItemType) {
                 var customItemType = (CustomItemType) object;
                 var customItem = Core.getInstance().getCustomItemManager().getItemByType(customItemType);
+
                 if (craftingMatrix[i] == null || !customItem.matches(craftingMatrix[i]))
                     return false;
             } else if (craftingMatrix[i] != null) {
@@ -87,7 +89,7 @@ public final class ShapedRecipe implements Recipe {
             newBukkitRecipe.shape(bukkitShape);
 
             for (char c : shape) {
-                Object lookup = charLookupMap.get(c);
+                var lookup = charLookupMap.get(c);
                 Material material;
                 if (lookup instanceof Material) {
                     material = (Material) lookup;
