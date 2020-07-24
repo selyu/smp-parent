@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.selyu.smp.core.Core;
@@ -13,9 +14,9 @@ import org.selyu.smp.core.util.BukkitUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import static co.aikar.commands.ACFBukkitUtil.color;
 import static org.selyu.smp.core.util.BukkitUtil.ensureMeta;
 import static org.selyu.smp.core.util.BukkitUtil.isCustomItem;
+import static org.selyu.smp.core.util.MessageUtil.color;
 
 public abstract class CustomItem {
     public static final NamespacedKey INTERNAL_NAME_KEY = Core.keyOf("internal_name");
@@ -49,11 +50,13 @@ public abstract class CustomItem {
     public final ItemStack getMenuItem() {
         var itemStack = new ItemStack(material);
         var itemMeta = ensureMeta(itemStack);
-        if (!getDisplayName().isBlank())
-            itemMeta.setDisplayName(color(getDisplayName()));
 
+        itemMeta.setDisplayName(color(getDisplayName()));
+        itemMeta.setLore(color(getLore()));
         itemMeta.setCustomModelData(modelData);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.getPersistentDataContainer().set(INTERNAL_NAME_KEY, PersistentDataType.STRING, internalName);
+
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }

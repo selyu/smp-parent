@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
@@ -32,6 +33,15 @@ public final class CustomItemListener implements Listener {
 
             if (shapedRecipe != null && !shapedRecipe.validCraftingMatrix(event.getInventory().getMatrix()))
                 event.getInventory().setResult(null);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onCraft(CraftItemEvent event) {
+        var itemStack = event.getRecipe().getResult();
+        if(isCustomItem(itemStack)) {
+            var realItem = customItemManager.getItemByType(getCustomItemType(itemStack)).getItem();
+            event.setCurrentItem(realItem);
         }
     }
 

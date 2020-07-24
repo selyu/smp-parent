@@ -5,6 +5,9 @@ import org.jetbrains.annotations.NotNull;
 
 public interface Recipe {
     @NotNull
+    ItemStack getDisplayItem();
+
+    @NotNull
     ItemStack getFinalItem();
 
     @NotNull

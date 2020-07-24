@@ -62,6 +62,11 @@ public final class ShapedRecipe implements Recipe {
     }
 
     @Override
+    public @NotNull ItemStack getDisplayItem() {
+        return customItem.getMenuItem().clone();
+    }
+
+    @Override
     public @NotNull ItemStack getFinalItem() {
         return customItem.getItem().clone();
     }
@@ -70,7 +75,7 @@ public final class ShapedRecipe implements Recipe {
     @Override
     public org.bukkit.inventory.Recipe toBukkitRecipe() {
         if (bukkitRecipe == null) {
-            var newBukkitRecipe = new org.bukkit.inventory.ShapedRecipe(Core.keyOf(customItem.getCustomItemType().name()), getFinalItem());
+            var newBukkitRecipe = new org.bukkit.inventory.ShapedRecipe(Core.keyOf(customItem.getCustomItemType().name()), getDisplayItem());
             var bukkitShape = new String[3];
             var row = new StringBuilder();
             var rowIndex = 0;
