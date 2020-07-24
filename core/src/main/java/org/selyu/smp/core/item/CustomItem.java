@@ -10,7 +10,7 @@ import org.selyu.smp.core.Core;
 import org.selyu.smp.core.item.recipe.Recipe;
 import org.selyu.smp.core.util.BukkitUtil;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import static co.aikar.commands.ACFBukkitUtil.color;
@@ -37,7 +37,7 @@ public abstract class CustomItem {
 
     @NotNull
     public List<String> getLore() {
-        return Collections.emptyList();
+        return new ArrayList<>();
     }
 
     @NotNull
@@ -62,7 +62,7 @@ public abstract class CustomItem {
         if (!isCustomItem(itemStack))
             return false;
         var itemMeta = itemStack.getItemMeta();
-        if(itemMeta == null)
+        if (itemMeta == null)
             return false;
 
         return material.equals(itemStack.getType()) && itemMeta.hasCustomModelData() && modelData == itemMeta.getCustomModelData() && customItemType.equals(BukkitUtil.getCustomItemType(itemStack));

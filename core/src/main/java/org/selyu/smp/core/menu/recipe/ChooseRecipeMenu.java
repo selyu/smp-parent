@@ -112,7 +112,7 @@ public final class ChooseRecipeMenu implements InventoryProvider {
 
             int finalI = i;
             newMap.forEach((ingredient, amount) -> {
-                if(usedIngredients.contains(ingredient))
+                if (usedIngredients.contains(ingredient))
                     return;
 
                 if (ingredient instanceof Material) {

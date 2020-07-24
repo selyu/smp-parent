@@ -5,11 +5,13 @@ import org.jetbrains.annotations.NotNull;
 import org.selyu.smp.core.item.CustomItemType;
 import org.selyu.smp.core.item.DurableCustomItem;
 import org.selyu.smp.core.item.recipe.Recipe;
-import org.selyu.smp.core.item.recipe.ShapedRecipe;
+import org.selyu.smp.core.item.recipe.ShapedRecipeBuilder;
+
+import static org.selyu.smp.core.util.DurabilityUtil.HELLSTONE_INGOT;
 
 public final class HellstonePickaxeItem extends DurableCustomItem {
     public HellstonePickaxeItem() {
-        super(CustomItemType.HELLSTONE_PICKAXE, Material.IRON_PICKAXE, 1, 1000);
+        super(CustomItemType.HELLSTONE_PICKAXE, Material.IRON_PICKAXE, 1, HELLSTONE_INGOT * 3);
     }
 
     @NotNull
@@ -20,14 +22,14 @@ public final class HellstonePickaxeItem extends DurableCustomItem {
 
     @Override
     public @NotNull Recipe getRecipe() {
-        var recipe = new ShapedRecipe(this);
-        recipe.setShape(
-                'i', 'i', 'i',
-                '_', 's', '_',
-                '_', 's', '_'
-        );
-        recipe.setIngredient('i', CustomItemType.HELLSTONE_INGOT);
-        recipe.setIngredient('s', Material.STICK);
-        return recipe;
+        return new ShapedRecipeBuilder(this)
+                .shape(
+                        'i', 'i', 'i',
+                        '_', 's', '_',
+                        '_', 's', '_'
+                )
+                .ingredient('i', CustomItemType.HELLSTONE_INGOT)
+                .ingredient('s', Material.STICK)
+                .build();
     }
 }

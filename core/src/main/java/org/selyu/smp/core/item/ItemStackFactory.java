@@ -34,11 +34,10 @@ class ItemStackFactory {
     public static ItemStack createDurable(@NotNull DurableCustomItem durableCustomItem) {
         var itemStack = create(durableCustomItem);
         var itemMeta = ensureMeta(itemStack);
-        itemMeta.setUnbreakable(true);
 
         itemMeta.setLore(addDurabilityLore(durableCustomItem, durableCustomItem.getMaxDurability()));
-        itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES);
-        itemMeta.getPersistentDataContainer().set(DurableCustomItem.DURABILITY_KEY, PersistentDataType.INTEGER, durableCustomItem.getMaxDurability());
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.getPersistentDataContainer().set(DurableCustomItem.DAMAGE_KEY, PersistentDataType.INTEGER, 0);
 
         itemStack.setItemMeta(itemMeta);
         return itemStack;
@@ -49,6 +48,6 @@ class ItemStackFactory {
         List<String> lore = durableCoreItem.getLore();
         lore.add("");
         lore.add(String.format("&fDurability: %s / %s", durability, durableCoreItem.getMaxDurability()));
-        return color(durableCoreItem.getLore());
+        return color(lore);
     }
 }

@@ -28,12 +28,9 @@ public final class CustomItemListener implements Listener {
         var result = event.getRecipe().getResult();
         if (event.getRecipe() instanceof ShapedRecipe && isCustomItem(result)) {
             var customItem = customItemManager.getItemByType(getCustomItemType(result));
-            if (customItem.getRecipe() instanceof org.selyu.smp.core.item.recipe.ShapedRecipe) {
-                var customRecipe = (org.selyu.smp.core.item.recipe.ShapedRecipe) customItem.getRecipe();
-                if (!customRecipe.validCraftingMatrix(event.getInventory().getMatrix())) {
-                    event.getInventory().setResult(null);
-                }
-            }
+            var shapedRecipe = (org.selyu.smp.core.item.recipe.ShapedRecipe) customItem.getRecipe();
+            if (shapedRecipe != null && !shapedRecipe.validCraftingMatrix(event.getInventory().getMatrix()))
+                event.getInventory().setResult(null);
         }
     }
 

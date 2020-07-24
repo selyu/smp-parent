@@ -1,5 +1,6 @@
 package org.selyu.smp.core.manager;
 
+import com.google.common.collect.Lists;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
@@ -19,6 +20,7 @@ import org.selyu.smp.core.item.impl.HellstonePickaxeItem;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import static org.selyu.smp.core.util.BukkitUtil.ensureMeta;
@@ -30,14 +32,14 @@ public final class CustomItemManager {
             new HellstonePickaxeItem()
     );
 
-    private final Map<Class<?>, Set<SubscribedMethod>> subscribersMap = wrap(items);
+    private final Map<Class<?>, List<SubscribedMethod>> subscribersMap = wrap(items);
 
     public void addRecipes() {
         for (CustomItem item : items) {
-            if (item.getRecipe() != null) {
-                Recipe bukkitRecipe = item.getRecipe().toBukkitRecipe();
-                Core.getInstance().getServer().addRecipe(bukkitRecipe);
-            }
+            if (item.getRecipe() == null)
+                continue;
+            Recipe bukkitRecipe = item.getRecipe().toBukkitRecipe();
+            Core.getInstance().getServer().addRecipe(bukkitRecipe);
         }
     }
 
@@ -47,7 +49,10 @@ public final class CustomItemManager {
         if (subscribers == null)
             return;
 
-        for (SubscribedMethod subscriber : subscribers) {
+        List<SubscribedMethod> subscribedMethods = Lists.newArrayList(subscribers);
+        subscribedMethods.sort((o1, o2) -> o2.priority - o1.priority);
+
+        for (SubscribedMethod subscriber : subscribedMethods) {
             if (subscriber.parent.getMaterial() == itemStack.getType() &&
                     subscriber.parent.getModelData() == itemStack.getItemMeta().getCustomModelData()) {
                 try {
@@ -99,20 +104,17 @@ public final class CustomItemManager {
     }
 
     @NotNull
-    private Map<Class<?>, Set<SubscribedMethod>> wrap(@NotNull List<CustomItem> items) {
-        var map = new HashMap<Class<?>, Set<SubscribedMethod>>();
+    private Map<Class<?>, List<SubscribedMethod>> wrap(@NotNull List<CustomItem> items) {
+        var map = new HashMap<Class<?>, List<SubscribedMethod>>();
         for (CustomItem item : items) {
-            map.putAll(getSubscribedMethods(item, item.getClass().getDeclaredMethods()));
+            addSubscribedMethods(item, map, item.getClass().getDeclaredMethods());
             if (item instanceof DurableCustomItem)
-                map.putAll(getSubscribedMethods(item, item.getClass().getSuperclass().getDeclaredMethods()));
+                addSubscribedMethods(item, map, item.getClass().getSuperclass().getDeclaredMethods());
         }
         return map;
     }
 
-    @NotNull
-    private Map<Class<?>, Set<SubscribedMethod>> getSubscribedMethods(@NotNull CustomItem customItem, @NotNull Method[] methods) {
-        var map = new HashMap<Class<?>, Set<SubscribedMethod>>();
-
+    private void addSubscribedMethods(@NotNull CustomItem customItem, @NotNull Map<Class<?>, List<SubscribedMethod>> map, @NotNull Method[] methods) {
         for (Method method : methods) {
             if (!method.isAnnotationPresent(ItemEventHandler.class) ||
                     method.getParameterCount() != 1 ||
@@ -120,24 +122,33 @@ public final class CustomItemManager {
                     !method.trySetAccessible()) {
                 continue;
             }
-
+            var annotation = method.getAnnotation(ItemEventHandler.class);
             var event = method.getParameterTypes()[0];
-            var mapValue = map.getOrDefault(event, new HashSet<>());
-            mapValue.add(new SubscribedMethod(customItem, method));
+            var mapValue = map.computeIfAbsent(event, (aClass -> new CopyOnWriteArrayList<>()));
+            mapValue.add(new SubscribedMethod(customItem, method, annotation.priority()));
 
             map.put(event, mapValue);
         }
-
-        return map;
     }
 
     private static final class SubscribedMethod {
         private final CustomItem parent;
         private final Method method;
+        private final int priority;
 
-        public SubscribedMethod(CustomItem parent, Method method) {
+        public SubscribedMethod(CustomItem parent, Method method, int priority) {
             this.parent = parent;
             this.method = method;
+            this.priority = priority;
+        }
+
+        @Override
+        public String toString() {
+            return "SubscribedMethod{" +
+                    "parent=" + parent +
+                    ", method=" + method +
+                    ", priority=" + priority +
+                    '}';
         }
     }
 }
