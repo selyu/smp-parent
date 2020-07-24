@@ -14,9 +14,9 @@ import org.selyu.smp.core.item.CustomItemType;
 import org.selyu.smp.core.item.DurableCustomItem;
 import org.selyu.smp.core.item.annotation.ItemEventHandler;
 import org.selyu.smp.core.item.impl.DiamondShearsItem;
-import org.selyu.smp.core.item.impl.HellstoneIngotItem;
-import org.selyu.smp.core.item.impl.HellstonePickaxeItem;
-import org.selyu.smp.core.item.impl.HellstoneShovelItem;
+import org.selyu.smp.core.item.impl.hellstone.HellstoneIngotItem;
+import org.selyu.smp.core.item.impl.hellstone.HellstonePickaxeItem;
+import org.selyu.smp.core.item.impl.hellstone.HellstoneShovelItem;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

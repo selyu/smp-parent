@@ -1,4 +1,4 @@
-package org.selyu.smp.core.item.impl;
+package org.selyu.smp.core.item.impl.hellstone;
 
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
