@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
 import static org.selyu.smp.core.util.BukkitUtil.ensureMeta;
 
 public abstract class DurableCustomItem extends CustomItem {
-    public static final NamespacedKey DAMAGE_KEY = Core.keyOf("damage");
+    public static final NamespacedKey DAMAGE_KEY = new NamespacedKey(Core.getInstance(), "damage");
     private static final Random random = new Random();
 
     private final int maxDurability;

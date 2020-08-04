@@ -4,6 +4,7 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
 import org.bson.UuidRepresentation;
 import org.jetbrains.annotations.NotNull;
 import org.selyu.smp.core.data.Repository;
@@ -16,12 +17,12 @@ public final class MongoRepository implements Repository {
     private final ProfileStore profileStore;
 
     public MongoRepository() {
-        var settingsBuilder = MongoClientSettings.builder();
+        MongoClientSettings.Builder settingsBuilder = MongoClientSettings.builder();
         settingsBuilder.uuidRepresentation(UuidRepresentation.STANDARD);
-        settingsBuilder.applyConnectionString(new ConnectionString(Settings.CONNECTION_STRING));
+        settingsBuilder.applyConnectionString(new ConnectionString(Settings.connectionString));
 
         mongoClient = MongoClients.create(settingsBuilder.build());
-        var database = mongoClient.getDatabase(Settings.DATABASE_NAME);
+        MongoDatabase database = mongoClient.getDatabase(Settings.databaseName);
 
         profileStore = new MongoProfileStore(database.getCollection("profiles"));
     }

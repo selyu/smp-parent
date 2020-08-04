@@ -2,6 +2,7 @@ package org.selyu.smp.core.item;
 
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,8 +17,8 @@ class ItemStackFactory {
 
     @NotNull
     public static ItemStack create(@NotNull CustomItem customItem) {
-        var itemStack = new ItemStack(customItem.getMaterial());
-        var itemMeta = ensureMeta(itemStack);
+        ItemStack itemStack = new ItemStack(customItem.getMaterial());
+        ItemMeta itemMeta = ensureMeta(itemStack);
         if (!customItem.getDisplayName().isBlank())
             itemMeta.setDisplayName(color(customItem.getDisplayName()));
         if (!customItem.getLore().isEmpty())
@@ -32,8 +33,8 @@ class ItemStackFactory {
 
     @NotNull
     public static ItemStack createDurable(@NotNull DurableCustomItem durableCustomItem) {
-        var itemStack = create(durableCustomItem);
-        var itemMeta = ensureMeta(itemStack);
+        ItemStack itemStack = create(durableCustomItem);
+        ItemMeta itemMeta = ensureMeta(itemStack);
 
         itemMeta.setLore(addDurabilityLore(durableCustomItem, durableCustomItem.getMaxDurability()));
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

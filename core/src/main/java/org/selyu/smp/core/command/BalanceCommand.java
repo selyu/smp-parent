@@ -40,7 +40,7 @@ public final class BalanceCommand extends BaseCommand {
     @CommandCompletion("@players")
     @Syntax("<player> <new balance>")
     public void onSet(CommandSender sender, Profile target, double balance) {
-        var targetPlayer = target.toPlayer();
+        Player targetPlayer = target.toPlayer();
         target.setBalance(balance);
 
         if (targetPlayer != null) {
@@ -57,7 +57,7 @@ public final class BalanceCommand extends BaseCommand {
     @CommandCompletion("@players")
     @Syntax("<player> <amount>")
     public void onAdd(CommandSender sender, Profile target, double amount) {
-        var targetPlayer = target.toPlayer();
+        Player targetPlayer = target.toPlayer();
         target.addBalance(amount);
 
         if (targetPlayer != null) {
@@ -74,8 +74,8 @@ public final class BalanceCommand extends BaseCommand {
     @CommandCompletion("@players")
     @Syntax("<player> <amount>")
     public void onRemove(CommandSender sender, Profile target, double amount) {
-        var targetPlayer = target.toPlayer();
-        var result = target.removeBalance(amount);
+        Player targetPlayer = target.toPlayer();
+        boolean result = target.removeBalance(amount);
         if (result) {
             if (targetPlayer != null) {
                 info(targetPlayer, String.format("Someone took %s from your balance!", amount));

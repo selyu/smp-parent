@@ -6,7 +6,6 @@ import fr.minuskube.inv.InventoryManager;
 import fr.minuskube.inv.SmartInventory;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,10 +39,6 @@ public final class Core extends JavaPlugin {
 
     public static Core getInstance() {
         return instance;
-    }
-
-    public static NamespacedKey keyOf(String key) {
-        return new NamespacedKey(instance, key);
     }
 
     @Override

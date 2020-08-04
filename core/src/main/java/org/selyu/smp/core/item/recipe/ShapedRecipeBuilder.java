@@ -36,7 +36,7 @@ public final class ShapedRecipeBuilder {
     }
 
     public @NotNull Recipe build() {
-        var recipe = new ShapedRecipe(customItem);
+        ShapedRecipe recipe = new ShapedRecipe(customItem);
         ingredients.forEach((character, o) -> {
             if (o instanceof Material) {
                 recipe.setIngredient(character, (Material) o);

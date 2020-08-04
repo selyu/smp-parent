@@ -8,7 +8,7 @@ import org.selyu.smp.core.data.Repository;
 import org.selyu.smp.core.manager.ProfileManager;
 import org.selyu.smp.core.profile.Profile;
 
-import static com.ea.async.Async.await;
+import java.util.Optional;
 
 public final class ProfileContextResolver implements ContextResolver<Profile, BukkitCommandExecutionContext> {
     private final ProfileManager profileManager = Core.getInstance().getProfileManager();
@@ -16,12 +16,12 @@ public final class ProfileContextResolver implements ContextResolver<Profile, Bu
 
     @Override
     public Profile getContext(BukkitCommandExecutionContext bukkitCommandExecutionContext) throws InvalidCommandArgument {
-        var username = bukkitCommandExecutionContext.popFirstArg();
-        var profileInCache = profileManager.getByUsername(username);
+        String username = bukkitCommandExecutionContext.popFirstArg();
+        Optional<Profile> profileInCache = profileManager.getByUsername(username);
         if (profileInCache.isPresent()) {
             return profileInCache.get();
         } else {
-            var profileInRepository = await(repository.getProfileStore().getByUsername(username));
+            Optional<Profile> profileInRepository = repository.getProfileStore().getByUsername(username).join();
             return profileInRepository.orElseThrow(() -> new InvalidCommandArgument(String.format("Invalid profile! Has %s logged on the server?", username)));
         }
     }

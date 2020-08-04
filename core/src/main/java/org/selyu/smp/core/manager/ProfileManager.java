@@ -15,29 +15,27 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.ea.async.Async.await;
-
 public final class ProfileManager {
     private final Repository repository = Core.getInstance().getRepository();
     private final Map<UUID, Profile> cache = new HashMap<>();
 
     public void login(@NotNull AsyncPlayerPreLoginEvent event) {
-        var optionalProfile = await(repository.getProfileStore().getByKey(event.getUniqueId()));
-        var profile = optionalProfile.orElseGet(() -> ProfileFactory.create(event.getUniqueId(), event.getName()));
+        Optional<Profile> optionalProfile = repository.getProfileStore().getByKey(event.getUniqueId()).join();
+        Profile profile = optionalProfile.orElseGet(() -> ProfileFactory.create(event.getUniqueId(), event.getName()));
 
         if (optionalProfile.isEmpty())
-            await(repository.getProfileStore().save(profile));
+            repository.getProfileStore().save(profile).join();
 
         profile.setUsername(event.getName());
         cache.put(event.getUniqueId(), profile);
     }
 
     public void quit(@NotNull PlayerQuitEvent event) {
-        var profile = cache.get(event.getPlayer().getUniqueId());
+        Profile profile = cache.get(event.getPlayer().getUniqueId());
         if (profile == null)
             return;
 
-        await(repository.getProfileStore().save(profile));
+        repository.getProfileStore().save(profile).join();
         cache.remove(event.getPlayer().getUniqueId());
     }
 

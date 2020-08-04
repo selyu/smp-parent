@@ -9,8 +9,6 @@ import org.jetbrains.annotations.Nullable;
 import org.selyu.smp.core.item.CustomItem;
 import org.selyu.smp.core.item.CustomItemType;
 
-import java.util.Objects;
-
 import static java.util.Objects.requireNonNull;
 
 public final class BukkitUtil {

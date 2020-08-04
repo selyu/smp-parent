@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.selyu.smp.core.Core;
@@ -51,7 +52,7 @@ public final class CustomItemManager {
     }
 
     public void runEvent(@NotNull Event event, @NotNull ItemStack itemStack) {
-        var subscribers = subscribersMap.get(event.getClass());
+        List<SubscribedMethod> subscribers = subscribersMap.get(event.getClass());
         if (subscribers == null)
             return;
 
@@ -83,12 +84,12 @@ public final class CustomItemManager {
 
     @NotNull
     public ItemStack getMenuItemByType(@NotNull CustomItemCategory customItemCategory) {
-        var customItem = items.stream()
+        CustomItem customItem = items.stream()
                 .filter(customItem1 -> customItem1.getCustomItemType().getCustomItemCategory() == customItemCategory)
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException("No items with type " + customItemCategory));
-        var itemStack = new ItemStack(customItem.getMaterial());
-        var itemMeta = ensureMeta(itemStack);
+        ItemStack itemStack = new ItemStack(customItem.getMaterial());
+        ItemMeta itemMeta = ensureMeta(itemStack);
         itemMeta.setDisplayName(ChatColor.RESET + customItemCategory.getCorrectName());
         itemMeta.setCustomModelData(customItem.getModelData());
 
@@ -106,7 +107,7 @@ public final class CustomItemManager {
 
     @NotNull
     private Map<Class<?>, List<SubscribedMethod>> wrap(@NotNull List<CustomItem> items) {
-        var map = new HashMap<Class<?>, List<SubscribedMethod>>();
+        HashMap<Class<?>, List<SubscribedMethod>> map = new HashMap<>();
         for (CustomItem item : items) {
             addSubscribedMethods(item, map, item.getClass().getDeclaredMethods());
             if (item instanceof DurableCustomItem)
@@ -121,9 +122,9 @@ public final class CustomItemManager {
                     method.getParameterTypes()[0]) || !method.trySetAccessible())
                 continue;
 
-            var annotation = method.getAnnotation(ItemEventHandler.class);
-            var event = method.getParameterTypes()[0];
-            var mapValue = map.computeIfAbsent(event, (aClass -> new CopyOnWriteArrayList<>()));
+            ItemEventHandler annotation = method.getAnnotation(ItemEventHandler.class);
+            Class<?> event = method.getParameterTypes()[0];
+            List<SubscribedMethod> mapValue = map.computeIfAbsent(event, (aClass -> new CopyOnWriteArrayList<>()));
 
             mapValue.add(new SubscribedMethod(customItem, method, annotation.priority()));
             map.put(event, mapValue);

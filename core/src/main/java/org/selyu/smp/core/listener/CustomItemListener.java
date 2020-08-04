@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.jetbrains.annotations.Nullable;
 import org.selyu.smp.core.Core;
+import org.selyu.smp.core.item.CustomItem;
 import org.selyu.smp.core.manager.CustomItemManager;
 
 import static org.selyu.smp.core.util.BukkitUtil.getCustomItemType;
@@ -26,10 +27,10 @@ public final class CustomItemListener implements Listener {
         if (event.getRecipe() == null)
             return;
 
-        var result = event.getRecipe().getResult();
+        ItemStack result = event.getRecipe().getResult();
         if (event.getRecipe() instanceof ShapedRecipe && isCustomItem(result)) {
-            var customItem = customItemManager.getItemByType(getCustomItemType(result));
-            var shapedRecipe = (org.selyu.smp.core.item.recipe.ShapedRecipe) customItem.getRecipe();
+            CustomItem customItem = customItemManager.getItemByType(getCustomItemType(result));
+            org.selyu.smp.core.item.recipe.ShapedRecipe shapedRecipe = (org.selyu.smp.core.item.recipe.ShapedRecipe) customItem.getRecipe();
 
             if (shapedRecipe != null && !shapedRecipe.validCraftingMatrix(event.getInventory().getMatrix()))
                 event.getInventory().setResult(null);
@@ -38,9 +39,9 @@ public final class CustomItemListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCraft(CraftItemEvent event) {
-        var itemStack = event.getRecipe().getResult();
+        ItemStack itemStack = event.getRecipe().getResult();
         if(isCustomItem(itemStack)) {
-            var realItem = customItemManager.getItemByType(getCustomItemType(itemStack)).getItem();
+            ItemStack realItem = customItemManager.getItemByType(getCustomItemType(itemStack)).getItem();
             event.setCurrentItem(realItem);
         }
     }

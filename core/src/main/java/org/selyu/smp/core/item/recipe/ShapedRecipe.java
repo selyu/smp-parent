@@ -1,6 +1,7 @@
 package org.selyu.smp.core.item.recipe;
 
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,17 +41,17 @@ public final class ShapedRecipe implements Recipe {
 
     @SuppressWarnings("ConstantConditions")
     public boolean validCraftingMatrix(@Nullable ItemStack[] craftingMatrix) {
-        var matrix = getMatrix();
+        Object[] matrix = getMatrix();
         for (int i = 0; i < 9; i++) {
-            var object = matrix[i];
+            Object object = matrix[i];
             if (object instanceof Material) {
-                var material = (Material) object;
+                Material material = (Material) object;
 
                 if (isCustomItem(craftingMatrix[i]) || craftingMatrix[i] == null || !craftingMatrix[i].getType().equals(material))
                     return false;
             } else if (object instanceof CustomItemType) {
-                var customItemType = (CustomItemType) object;
-                var customItem = Core.getInstance().getCustomItemManager().getItemByType(customItemType);
+                CustomItemType customItemType = (CustomItemType) object;
+                CustomItem customItem = Core.getInstance().getCustomItemManager().getItemByType(customItemType);
 
                 if (craftingMatrix[i] == null || !customItem.matches(craftingMatrix[i]))
                     return false;
@@ -75,10 +76,11 @@ public final class ShapedRecipe implements Recipe {
     @Override
     public org.bukkit.inventory.Recipe toBukkitRecipe() {
         if (bukkitRecipe == null) {
-            var newBukkitRecipe = new org.bukkit.inventory.ShapedRecipe(Core.keyOf(customItem.getCustomItemType().name()), getDisplayItem());
-            var bukkitShape = new String[3];
-            var row = new StringBuilder();
-            var rowIndex = 0;
+            NamespacedKey namespacedKey = new NamespacedKey(Core.getInstance(), customItem.getCustomItemType().name());
+            org.bukkit.inventory.ShapedRecipe newBukkitRecipe = new org.bukkit.inventory.ShapedRecipe(namespacedKey, getDisplayItem());
+            String[] bukkitShape = new String[3];
+            StringBuilder row = new StringBuilder();
+            int rowIndex = 0;
 
             for (int i = 0; i < shape.length; i++) {
                 char c = shape[i];
@@ -94,7 +96,7 @@ public final class ShapedRecipe implements Recipe {
             newBukkitRecipe.shape(bukkitShape);
 
             for (char c : shape) {
-                var lookup = charLookupMap.get(c);
+                Object lookup = charLookupMap.get(c);
                 Material material;
                 if (lookup instanceof Material) {
                     material = (Material) lookup;
@@ -116,7 +118,7 @@ public final class ShapedRecipe implements Recipe {
     @Nullable
     public Object[] getMatrix() {
         if (matrix == null) {
-            var newMatrix = new Object[9];
+            Object[] newMatrix = new Object[9];
             for (int i = 0; i < shape.length; i++) {
                 newMatrix[i] = charLookupMap.get(shape[i]);
             }

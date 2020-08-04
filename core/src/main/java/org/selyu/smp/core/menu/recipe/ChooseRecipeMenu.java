@@ -3,11 +3,13 @@ package org.selyu.smp.core.menu.recipe;
 import fr.minuskube.inv.ClickableItem;
 import fr.minuskube.inv.content.InventoryContents;
 import fr.minuskube.inv.content.InventoryProvider;
+import fr.minuskube.inv.content.Pagination;
 import fr.minuskube.inv.content.SlotIterator;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.selyu.smp.core.Core;
 import org.selyu.smp.core.item.CustomItemCategory;
@@ -48,15 +50,15 @@ public final class ChooseRecipeMenu implements InventoryProvider {
     public void init(Player player, InventoryContents inventoryContents) {
         inventoryContents.fill(Menus.PLACEHOLDER_ITEM);
 
-        var pagination = inventoryContents.pagination();
-        var itemsArray = customItemManager.getCraftableItemsByCategory(customItemCategory)
+        Pagination pagination = inventoryContents.pagination();
+        ClickableItem[] itemsArray = customItemManager.getCraftableItemsByCategory(customItemCategory)
                 .stream()
                 .map(coreItem -> {
-                    var recipe = requireNonNull(coreItem.getRecipe());
-                    var itemStack = coreItem.getMenuItem();
-                    var itemMeta = ensureMeta(itemStack);
-                    var lore = new ArrayList<String>();
-                    var ingredientsWithAmount = getIngredientsWithAmount(recipe);
+                    Recipe recipe = requireNonNull(coreItem.getRecipe());
+                    ItemStack itemStack = coreItem.getMenuItem();
+                    ItemMeta itemMeta = ensureMeta(itemStack);
+                    ArrayList<String> lore = new ArrayList<>();
+                    Map<Object, Integer> ingredientsWithAmount = getIngredientsWithAmount(recipe);
 
                     ingredientsWithAmount.forEach((o, amount) -> lore.add(color(String.format("&f%sx %s", amount, o.toString()))));
                     itemMeta.setLore(lore);
@@ -83,9 +85,9 @@ public final class ChooseRecipeMenu implements InventoryProvider {
 
     @NotNull
     private Map<Object, Integer> getIngredientsWithAmount(Recipe recipe) {
-        var map = new HashMap<Object, Integer>();
+        HashMap<Object, Integer> map = new HashMap<>();
         if (recipe instanceof ShapedRecipe) {
-            var shapedRecipe = (ShapedRecipe) recipe;
+            ShapedRecipe shapedRecipe = (ShapedRecipe) recipe;
             for (Object object : shapedRecipe.getMatrix()) {
                 if (object == null)
                     continue;
@@ -99,12 +101,12 @@ public final class ChooseRecipeMenu implements InventoryProvider {
     @SuppressWarnings("ConstantConditions")
     private boolean canCraft(@NotNull PlayerInventory playerInventory, @NotNull Map<Object, Integer> map) {
         // There are probably better ways to do this, but it works.
-        var newMap = new HashMap<>(map);
-        var usedIngredients = new HashSet<>();
-        var updatedItems = new HashMap<Integer, ItemStack>();
+        HashMap<Object, Integer> newMap = new HashMap<>(map);
+        HashSet<Object> usedIngredients = new HashSet<>();
+        HashMap<Integer, ItemStack> updatedItems = new HashMap<>();
 
         for (int i = 0; i < playerInventory.getContents().length; i++) {
-            var itemStack = playerInventory.getContents()[i];
+            ItemStack itemStack = playerInventory.getContents()[i];
             if (itemStack == null || itemStack.getType().equals(Material.AIR))
                 continue;
 
@@ -115,14 +117,14 @@ public final class ChooseRecipeMenu implements InventoryProvider {
 
                 if (ingredient instanceof Material) {
                     if (itemStack.getType().equals(ingredient) && itemStack.getAmount() >= amount) {
-                        var newItemStack = itemStack.clone();
+                        ItemStack newItemStack = itemStack.clone();
                         newItemStack.setAmount(newItemStack.getAmount() - amount);
                         updatedItems.put(finalI, newItemStack);
                         usedIngredients.add(ingredient);
                     }
                 } else if (ingredient instanceof CustomItemType) {
                     if (isCustomItem(itemStack) && getCustomItemType(itemStack).equals(ingredient) && itemStack.getAmount() >= amount) {
-                        var newItemStack = itemStack.clone();
+                        ItemStack newItemStack = itemStack.clone();
                         newItemStack.setAmount(newItemStack.getAmount() - amount);
                         updatedItems.put(finalI, newItemStack);
                         usedIngredients.add(ingredient);

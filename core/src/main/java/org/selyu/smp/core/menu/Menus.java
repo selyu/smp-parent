@@ -3,6 +3,7 @@ package org.selyu.smp.core.menu;
 import fr.minuskube.inv.ClickableItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import static co.aikar.commands.ACFBukkitUtil.color;
@@ -19,8 +20,8 @@ public final class Menus {
 
     @NotNull
     private static ItemStack buildMenuItem(Material material, String displayName) {
-        var itemStack = new ItemStack(material);
-        var itemMeta = ensureMeta(itemStack);
+        ItemStack itemStack = new ItemStack(material);
+        ItemMeta itemMeta = ensureMeta(itemStack);
         itemMeta.setDisplayName(color(displayName));
 
         itemStack.setItemMeta(itemMeta);

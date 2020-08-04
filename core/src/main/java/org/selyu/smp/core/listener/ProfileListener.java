@@ -27,7 +27,7 @@ public final class ProfileListener implements Listener {
     @EventHandler
     public void onPreLogin(AsyncPlayerPreLoginEvent event) {
         try {
-            var start = System.currentTimeMillis();
+            long start = System.currentTimeMillis();
             profileManager.login(event);
             loginTimes.put(event.getUniqueId(), System.currentTimeMillis() - start);
         } catch (Exception e) {

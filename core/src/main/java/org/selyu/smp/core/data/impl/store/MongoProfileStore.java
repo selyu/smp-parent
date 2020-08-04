@@ -27,7 +27,7 @@ public final class MongoProfileStore implements ProfileStore {
     @Override
     public @NotNull CompletableFuture<Optional<Profile>> getByUsername(@NotNull String username) {
         return CompletableFuture.supplyAsync(() -> {
-            var document = collection.find(regex("username", Pattern.compile(Pattern.quote(username), Pattern.CASE_INSENSITIVE))).first();
+            Document document = collection.find(regex("username", Pattern.compile(Pattern.quote(username), Pattern.CASE_INSENSITIVE))).first();
             return Optional.ofNullable(deserialize(document));
         });
     }
@@ -35,7 +35,7 @@ public final class MongoProfileStore implements ProfileStore {
     @Override
     public @NotNull CompletableFuture<Optional<Profile>> getByKey(@NotNull UUID uuid) {
         return CompletableFuture.supplyAsync(() -> {
-            var document = collection.find(eq("_id", uuid)).first();
+            Document document = collection.find(eq("_id", uuid)).first();
             return Optional.ofNullable(deserialize(document));
         });
     }
@@ -43,7 +43,7 @@ public final class MongoProfileStore implements ProfileStore {
     @Override
     public @NotNull CompletableFuture<Profile> save(@NotNull Profile profile) {
         return CompletableFuture.supplyAsync(() -> {
-            var document = new Document("_id", profile.getUuid());
+            Document document = new Document("_id", profile.getUuid());
             document.append("username", profile.getUsername());
             document.append("balance", profile.getBalance());
 
