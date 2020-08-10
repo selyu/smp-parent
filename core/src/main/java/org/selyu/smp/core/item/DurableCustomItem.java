@@ -38,9 +38,11 @@ public abstract class DurableCustomItem extends CustomItem {
 
         int damage = itemMeta.getPersistentDataContainer().getOrDefault(DAMAGE_KEY, PersistentDataType.INTEGER, 0);
         int randomChance = random.nextInt(100);
-        if (randomChance > chanceToNegate)
-            damage++;
-        damage += damageTaken;
+        if (randomChance > chanceToNegate) {
+            damage += damageTaken;
+        } else {
+            return;
+        }
 
         if (damage != maxDurability) {
             itemMeta.setLore(ItemStackFactory.addDurabilityLore(this, maxDurability - damage));

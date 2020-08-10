@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.selyu.commands.api.annotation.Command;
 import org.selyu.commands.api.annotation.OptArg;
 import org.selyu.commands.api.annotation.Require;
+import org.selyu.commands.api.annotation.Sender;
 import org.selyu.commands.api.exception.CommandExitMessage;
 import org.selyu.smp.core.Core;
 import org.selyu.smp.core.data.Repository;
@@ -19,7 +20,7 @@ public final class BalanceCommand {
     private final Repository repository = Core.getInstance().getRepository();
 
     @Command(name = "", desc = "Get a players balance")
-    public void onDefault(CommandSender sender, @OptArg Profile target) throws CommandExitMessage {
+    public void onDefault(@Sender CommandSender sender, @OptArg Profile target) throws CommandExitMessage {
         if (target != null) {
             info(sender, "%s has %s shekels!", target.getUsername(), target.getBalance());
             return;
@@ -36,7 +37,7 @@ public final class BalanceCommand {
 
     @Command(name = "set", desc = "Set a players balance to specified amount")
     @Require("core.balance.edit")
-    public void onSet(CommandSender sender, Profile target, double balance) {
+    public void onSet(@Sender CommandSender sender, Profile target, double balance) {
         Player targetPlayer = target.toPlayer();
         target.setBalance(balance);
 
@@ -51,7 +52,7 @@ public final class BalanceCommand {
 
     @Command(name = "add", desc = "Give some shekels to a player")
     @Require("core.balance.edit")
-    public void onAdd(CommandSender sender, Profile target, double amount) {
+    public void onAdd(@Sender CommandSender sender, Profile target, double amount) {
         Player targetPlayer = target.toPlayer();
         target.addBalance(amount);
 
@@ -66,7 +67,7 @@ public final class BalanceCommand {
 
     @Command(name = "remove", desc = "Remove some shekels from a player")
     @Require("core.balance.edit")
-    public void onRemove(CommandSender sender, Profile target, double amount) {
+    public void onRemove(@Sender CommandSender sender, Profile target, double amount) {
         Player targetPlayer = target.toPlayer();
         boolean result = target.removeBalance(amount);
         if (result) {
