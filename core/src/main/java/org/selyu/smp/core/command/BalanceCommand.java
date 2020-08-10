@@ -1,11 +1,12 @@
 package org.selyu.smp.core.command;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.InvalidCommandArgument;
-import co.aikar.commands.annotation.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.selyu.commands.api.annotation.Command;
+import org.selyu.commands.api.annotation.OptArg;
+import org.selyu.commands.api.annotation.Require;
+import org.selyu.commands.api.exception.CommandExitMessage;
 import org.selyu.smp.core.Core;
 import org.selyu.smp.core.data.Repository;
 import org.selyu.smp.core.manager.ProfileManager;
@@ -13,79 +14,71 @@ import org.selyu.smp.core.profile.Profile;
 
 import static org.selyu.smp.core.util.MessageUtil.*;
 
-@CommandAlias("balance|bal|shekels")
-public final class BalanceCommand extends BaseCommand {
+public final class BalanceCommand {
     private final ProfileManager profileManager = Core.getInstance().getProfileManager();
     private final Repository repository = Core.getInstance().getRepository();
 
-    @Default
-    @Syntax("[player]")
-    public void onDefault(CommandSender sender, @Optional Profile target) {
+    @Command(name = "", desc = "Get a players balance")
+    public void onDefault(CommandSender sender, @OptArg Profile target) throws CommandExitMessage {
         if (target != null) {
-            info(sender, String.format("%s has %s shekels!", target.getUsername(), target.getBalance()));
+            info(sender, "%s has %s shekels!", target.getUsername(), target.getBalance());
             return;
         }
 
         if (sender instanceof ConsoleCommandSender) {
-            throw new InvalidCommandArgument(true);
+            throw new CommandExitMessage(error("You must specify a player!"));
         } else {
             profileManager
                     .getByUUID(((Player) sender).getUniqueId())
-                    .ifPresent((profile) -> info(sender, String.format("You have %s shekels!", profile.getBalance())));
+                    .ifPresent((profile) -> info(sender, "You have %s shekels!", profile.getBalance()));
         }
     }
 
-    @Subcommand("set")
-    @CommandPermission("core.balance.edit")
-    @CommandCompletion("@players")
-    @Syntax("<player> <new balance>")
+    @Command(name = "set", desc = "Set a players balance to specified amount")
+    @Require("core.balance.edit")
     public void onSet(CommandSender sender, Profile target, double balance) {
         Player targetPlayer = target.toPlayer();
         target.setBalance(balance);
 
         if (targetPlayer != null) {
-            info(targetPlayer, String.format("Someone set your balance to %s!", balance));
+            info(targetPlayer, "Someone set your balance to %s!", balance);
         } else {
-            repository.getProfileStore().save(target);
+            repository.getProfileStore().save(target).join();
         }
 
-        success(sender, String.format("You set %s balance to %s!", target.getProperUsername(), balance));
+        success(sender, "You set %s balance to %s!", target.getProperUsername(), balance);
     }
 
-    @Subcommand("add")
-    @CommandPermission("core.balance.edit")
-    @CommandCompletion("@players")
-    @Syntax("<player> <amount>")
+    @Command(name = "add", desc = "Give some shekels to a player")
+    @Require("core.balance.edit")
     public void onAdd(CommandSender sender, Profile target, double amount) {
         Player targetPlayer = target.toPlayer();
         target.addBalance(amount);
 
         if (targetPlayer != null) {
-            info(targetPlayer, String.format("Someone added %s to your balance!", amount));
+            info(targetPlayer, "Someone added %s to your balance!", amount);
         } else {
-            repository.getProfileStore().save(target);
+            repository.getProfileStore().save(target).join();
         }
 
-        success(sender, String.format("You added %s to %s balance!", amount, target.getProperUsername()));
+        success(sender, "You added %s to %s balance!", amount, target.getProperUsername());
     }
 
-    @Subcommand("remove")
-    @CommandPermission("core.balance.edit")
-    @CommandCompletion("@players")
-    @Syntax("<player> <amount>")
+    @Command(name = "remove", desc = "Remove some shekels from a player")
+    @Require("core.balance.edit")
     public void onRemove(CommandSender sender, Profile target, double amount) {
         Player targetPlayer = target.toPlayer();
         boolean result = target.removeBalance(amount);
         if (result) {
             if (targetPlayer != null) {
-                info(targetPlayer, String.format("Someone took %s from your balance!", amount));
+                info(targetPlayer, "Someone took %s from your balance!", amount);
             } else {
-                repository.getProfileStore().save(target);
+                repository.getProfileStore().save(target).join();
             }
 
-            success(sender, String.format("You took %s from %s balance!", amount, target.getProperUsername()));
+            success(sender, "You took %s from %s balance!", amount, target.getProperUsername());
         } else {
-            error(sender, String.format("%s only has %s shekels!", target.getUsername(), target.getBalance()));
+            error(sender, "%s only has %s shekels!", target.getUsername(), target.getBalance());
         }
     }
 }

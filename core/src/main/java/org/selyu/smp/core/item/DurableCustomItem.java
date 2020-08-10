@@ -1,12 +1,9 @@
 package org.selyu.smp.core.item;
 
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -14,7 +11,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.selyu.smp.core.Core;
-import org.selyu.smp.core.item.annotation.ItemEventHandler;
 
 import java.util.Random;
 
@@ -32,7 +28,7 @@ public abstract class DurableCustomItem extends CustomItem {
         this.maxDurability = maxDurability;
     }
 
-    private void handleDurability(@NotNull Player player, @NotNull ItemStack itemStack, @NotNull EquipmentSlot equipmentSlot, boolean setItemInSlot) {
+    protected void handleDamage(@NotNull Player player, @NotNull ItemStack itemStack, int damageTaken, @NotNull EquipmentSlot equipmentSlot, boolean setItemInSlot) {
         requireNonNull(player.getEquipment());
 
         ItemMeta itemMeta = ensureMeta(itemStack);
@@ -44,6 +40,7 @@ public abstract class DurableCustomItem extends CustomItem {
         int randomChance = random.nextInt(100);
         if (randomChance > chanceToNegate)
             damage++;
+        damage += damageTaken;
 
         if (damage != maxDurability) {
             itemMeta.setLore(ItemStackFactory.addDurabilityLore(this, maxDurability - damage));
@@ -56,18 +53,6 @@ public abstract class DurableCustomItem extends CustomItem {
             if (setItemInSlot)
                 player.getEquipment().setItem(equipmentSlot, itemStack);
         }
-    }
-
-    @ItemEventHandler(priority = 999)
-    public void onBlockBreak(BlockBreakEvent event) {
-        if (event.getPlayer().getGameMode() != GameMode.CREATIVE)
-            handleDurability(event.getPlayer(), requireNonNull(event.getPlayer().getEquipment()).getItemInMainHand(), EquipmentSlot.HAND, false);
-    }
-
-    @ItemEventHandler(priority = 999)
-    public void onShear(PlayerShearEntityEvent event) {
-        if (event.getPlayer().getGameMode() != GameMode.CREATIVE)
-            handleDurability(event.getPlayer(), event.getItem(), event.getHand(), true);
     }
 
     @Override

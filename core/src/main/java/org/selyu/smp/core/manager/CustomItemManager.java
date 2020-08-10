@@ -12,7 +12,7 @@ import org.selyu.smp.core.Core;
 import org.selyu.smp.core.item.CustomItem;
 import org.selyu.smp.core.item.CustomItemCategory;
 import org.selyu.smp.core.item.CustomItemType;
-import org.selyu.smp.core.item.DurableCustomItem;
+import org.selyu.smp.core.item.SimpleDurableCustomItem;
 import org.selyu.smp.core.item.annotation.ItemEventHandler;
 import org.selyu.smp.core.item.impl.DiamondShearsItem;
 import org.selyu.smp.core.item.impl.hellstone.HellstoneIngotItem;
@@ -43,8 +43,9 @@ public final class CustomItemManager {
 
     public void addRecipes() {
         for (CustomItem item : items) {
-            if (item.getRecipe() == null)
+            if (item.getRecipe() == null) {
                 continue;
+            }
 
             Recipe bukkitRecipe = item.getRecipe().toBukkitRecipe();
             Core.getInstance().getServer().addRecipe(bukkitRecipe);
@@ -110,17 +111,21 @@ public final class CustomItemManager {
         HashMap<Class<?>, List<SubscribedMethod>> map = new HashMap<>();
         for (CustomItem item : items) {
             addSubscribedMethods(item, map, item.getClass().getDeclaredMethods());
-            if (item instanceof DurableCustomItem)
+            if (item instanceof SimpleDurableCustomItem) {
                 addSubscribedMethods(item, map, item.getClass().getSuperclass().getDeclaredMethods());
+            }
         }
         return map;
     }
 
     private void addSubscribedMethods(@NotNull CustomItem customItem, @NotNull Map<Class<?>, List<SubscribedMethod>> map, @NotNull Method[] methods) {
         for (Method method : methods) {
-            if (!method.isAnnotationPresent(ItemEventHandler.class) || method.getParameterCount() != 1 || !Event.class.isAssignableFrom(
-                    method.getParameterTypes()[0]) || !method.trySetAccessible())
+            if (!method.isAnnotationPresent(ItemEventHandler.class) ||
+                    method.getParameterCount() != 1 ||
+                    !Event.class.isAssignableFrom(method.getParameterTypes()[0]) ||
+                    !method.trySetAccessible()) {
                 continue;
+            }
 
             ItemEventHandler annotation = method.getAnnotation(ItemEventHandler.class);
             Class<?> event = method.getParameterTypes()[0];

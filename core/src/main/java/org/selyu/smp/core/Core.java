@@ -1,18 +1,18 @@
 package org.selyu.smp.core;
 
-import co.aikar.commands.MessageType;
-import co.aikar.commands.PaperCommandManager;
 import fr.minuskube.inv.InventoryManager;
 import fr.minuskube.inv.SmartInventory;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.selyu.commands.api.lang.Lang;
+import org.selyu.commands.spigot.SpigotCommandService;
+import org.selyu.commands.spigot.lang.SpigotLang;
 import org.selyu.smp.core.command.BalanceCommand;
 import org.selyu.smp.core.command.RecipesCommand;
-import org.selyu.smp.core.command.resolver.ProfileContextResolver;
+import org.selyu.smp.core.command.provider.ProfileProvider;
 import org.selyu.smp.core.data.Repository;
 import org.selyu.smp.core.data.impl.MongoRepository;
 import org.selyu.smp.core.listener.CustomItemListener;
@@ -24,7 +24,8 @@ import org.selyu.smp.core.settings.Settings;
 import org.selyu.ui.UserInterfaceProvider;
 
 import java.io.IOException;
-import java.util.Locale;
+
+import static org.selyu.smp.core.util.MessageUtil.error;
 
 public final class Core extends JavaPlugin {
     private static Core instance;
@@ -33,7 +34,6 @@ public final class Core extends JavaPlugin {
     private Repository repository;
     private ProfileManager profileManager;
     private CustomItemManager customItemManager;
-    private PaperCommandManager paperCommandManager;
     private InventoryManager inventoryManager;
     private BukkitAudiences bukkitAudiences;
 
@@ -53,24 +53,25 @@ public final class Core extends JavaPlugin {
         repository = new MongoRepository();
         profileManager = new ProfileManager();
         customItemManager = new CustomItemManager();
-        paperCommandManager = new PaperCommandManager(this);
         inventoryManager = new InventoryManager(this);
         bukkitAudiences = BukkitAudiences.create(this);
 
         customItemManager.addRecipes();
         inventoryManager.init();
 
-        paperCommandManager.getLocales().addMessageBundle("acf-locale", Locale.US);
-        paperCommandManager.getLocales().setDefaultLocale(Locale.US);
+        SpigotCommandService commandService = new SpigotCommandService(this);
+        commandService.bind(Profile.class).toProvider(new ProfileProvider());
 
-        paperCommandManager.setFormat(MessageType.ERROR, ChatColor.RED);
-        paperCommandManager.setFormat(MessageType.SYNTAX, ChatColor.RED);
-        paperCommandManager.setFormat(MessageType.INFO, ChatColor.AQUA);
-        paperCommandManager.setFormat(MessageType.HELP, ChatColor.YELLOW);
+        commandService.register(new BalanceCommand(), "balance", "bal", "shekels");
+        commandService.register(new RecipesCommand(), "recipes");
 
-        paperCommandManager.getCommandContexts().registerContext(Profile.class, new ProfileContextResolver());
-        paperCommandManager.registerCommand(new BalanceCommand());
-        paperCommandManager.registerCommand(new RecipesCommand());
+        for (Lang.Type value : Lang.Type.values()) {
+            commandService.getLang().set(value, error(commandService.getLang().get(value)));
+        }
+
+        for (SpigotLang.Type value : SpigotLang.Type.values()) {
+            commandService.getLang().set(value, error(commandService.getLang().get(value)));
+        }
 
         registerListeners(
                 new ProfileListener(),
@@ -80,6 +81,8 @@ public final class Core extends JavaPlugin {
         for (Player onlinePlayer : getServer().getOnlinePlayers()) {
             onlinePlayer.kickPlayer(Errors.CORE_LOADED);
         }
+
+        commandService.registerCommands();
     }
 
     @Override
@@ -111,10 +114,6 @@ public final class Core extends JavaPlugin {
 
     public CustomItemManager getCustomItemManager() {
         return customItemManager;
-    }
-
-    public PaperCommandManager getPaperCommandManager() {
-        return paperCommandManager;
     }
 
     public InventoryManager getInventoryManager() {

@@ -6,8 +6,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import static co.aikar.commands.ACFBukkitUtil.color;
 import static org.selyu.smp.core.util.BukkitUtil.ensureMeta;
+import static org.selyu.smp.core.util.MessageUtil.color;
 
 public final class Menus {
     public static final ClickableItem PLACEHOLDER_ITEM = ClickableItem.empty(buildMenuItem(Material.BLACK_STAINED_GLASS_PANE, "&0"));

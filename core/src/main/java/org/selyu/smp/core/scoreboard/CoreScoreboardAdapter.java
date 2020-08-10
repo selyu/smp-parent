@@ -12,9 +12,7 @@ import static org.selyu.smp.core.util.MessageUtil.rainbow;
 public final class CoreScoreboardAdapter implements ScoreboardAdapter {
     @Override
     public @NotNull ScoreboardTitle getTitle() {
-        ScoreboardTitle title = ScoreboardTitle.of(false, rainbow("SMP"));
-        title.setUpdateSpeed(1);
-        return title;
+        return ScoreboardTitle.of(false, 1, rainbow("SMP"));
     }
 
     @Override

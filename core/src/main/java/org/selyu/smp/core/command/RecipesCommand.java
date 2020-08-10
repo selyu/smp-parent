@@ -1,14 +1,11 @@
 package org.selyu.smp.core.command;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.Default;
 import org.bukkit.entity.Player;
+import org.selyu.commands.api.annotation.Command;
 import org.selyu.smp.core.menu.recipe.RecipeMenu;
 
-@CommandAlias("recipes")
-public final class RecipesCommand extends BaseCommand {
-    @Default
+public final class RecipesCommand {
+    @Command(name = "", desc = "Displays a recipe book")
     public void onDefault(Player sender) {
         RecipeMenu.INSTANCE.open(sender);
     }

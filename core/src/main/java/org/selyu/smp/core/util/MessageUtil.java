@@ -1,19 +1,23 @@
 package org.selyu.smp.core.util;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.selyu.smp.core.Core;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public final class MessageUtil {
-    private MessageUtil() {}
+    public static final ChatColor SUCCESS = ChatColor.of("#00C851");
+    public static final ChatColor INFO = ChatColor.of("#33b5e5");
+    public static final ChatColor WARNING = ChatColor.of("#FFbb33");
+    public static final ChatColor ERROR = ChatColor.of("#ff4444");
+    private static final String FORMAT = "%1$s" + ChatColor.BOLD + "!!%1$s %2$s";
+
+    private MessageUtil() {
+    }
 
     @NotNull
     public static String rainbow(@NotNull String string) {
@@ -32,24 +36,49 @@ public final class MessageUtil {
         return stringBuilder.toString();
     }
 
-    public static void success(@NotNull CommandSender sender, @NotNull String string) {
-        Component component = asComponent("<color:" + (sender instanceof Player ? "#00C851" : "green") + "><bold>!!</bold> " + string);
-        Core.getInstance().getBukkitAudiences().audience(sender).sendMessage(component);
+    @Nonnull
+    public static String[] color(@Nonnull String[] strings) {
+        for (int i = 0; i < strings.length; i++) {
+            strings[i] = color(strings[i]);
+        }
+        return strings;
     }
 
-    public static void info(@NotNull CommandSender sender, @NotNull String string) {
-        Component component = asComponent("<color:" + (sender instanceof Player ? "#33b5e5" : "aqua") + "><bold>!!</bold> " + string);
-        Core.getInstance().getBukkitAudiences().audience(sender).sendMessage(component);
+    @Nonnull
+    public static String success(@Nonnull String string, @Nonnull Object... placeholders) {
+        return String.format(FORMAT, SUCCESS, String.format(string, placeholders));
     }
 
-    public static void warning(@NotNull CommandSender sender, @NotNull String string) {
-        Component component = asComponent("<color:" + (sender instanceof Player ? "#FFbb33" : "yellow") + "><bold>!!</bold> " + string);
-        Core.getInstance().getBukkitAudiences().audience(sender).sendMessage(component);
+    @Nonnull
+    public static String info(@Nonnull String string, @Nonnull Object... placeholders) {
+        return String.format(FORMAT, INFO, String.format(string, placeholders));
     }
 
-    public static void error(@NotNull CommandSender sender, @NotNull String string) {
-        Component component = asComponent("<color:" + (sender instanceof Player ? "#ff4444" : "red") + "><bold>!!</bold> " + string);
-        Core.getInstance().getBukkitAudiences().audience(sender).sendMessage(component);
+    @Nonnull
+    public static String warning(@Nonnull String string, @Nonnull Object... placeholders) {
+        return String.format(FORMAT, WARNING, String.format(string, placeholders));
+    }
+
+    @Nonnull
+    public static String error(@Nonnull String string, @Nonnull Object... placeholders) {
+        return String.format(FORMAT, ERROR, String.format(string, placeholders));
+    }
+
+    public static void success(@Nonnull CommandSender commandSender, @Nonnull String string, @Nonnull Object... placeholders) {
+        commandSender.sendMessage(success(string, placeholders));
+    }
+
+    public static void info(@Nonnull CommandSender commandSender, @Nonnull String string, @Nonnull Object... placeholders) {
+        commandSender.sendMessage(info(string, placeholders));
+
+    }
+
+    public static void warning(@Nonnull CommandSender commandSender, @Nonnull String string, @Nonnull Object... placeholders) {
+        commandSender.sendMessage(warning(string, placeholders));
+    }
+
+    public static void error(@Nonnull CommandSender commandSender, @Nonnull String string, @Nonnull Object... placeholders) {
+        commandSender.sendMessage(error(string, placeholders));
     }
 
     @NotNull
@@ -60,10 +89,5 @@ public final class MessageUtil {
     @NotNull
     public static List<String> color(List<String> list) {
         return list.stream().map(MessageUtil::color).collect(Collectors.toList());
-    }
-
-    @NotNull
-    private static Component asComponent(@NotNull String string) {
-        return MiniMessage.get().parse(string);
     }
 }
