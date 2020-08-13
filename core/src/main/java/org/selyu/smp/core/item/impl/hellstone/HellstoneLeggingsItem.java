@@ -15,7 +15,7 @@ public final class HellstoneLeggingsItem extends SimpleDurableCustomItem {
 
     @Override
     public @NotNull String getDisplayName() {
-        return "&fHellstone Boots";
+        return "&fHellstone Leggings";
     }
 
     @Override
