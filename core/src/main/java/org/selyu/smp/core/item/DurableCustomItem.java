@@ -32,17 +32,9 @@ public abstract class DurableCustomItem extends CustomItem {
         requireNonNull(player.getEquipment());
 
         ItemMeta itemMeta = ensureMeta(itemStack);
-        int chanceToNegate = 0;
-        if (itemMeta.hasEnchant(Enchantment.DURABILITY))
-            chanceToNegate = 100 / (itemMeta.getEnchantLevel(Enchantment.DURABILITY) + 1);
 
         int damage = itemMeta.getPersistentDataContainer().getOrDefault(DAMAGE_KEY, PersistentDataType.INTEGER, 0);
-        int randomChance = random.nextInt(100);
-        if (randomChance > chanceToNegate) {
-            damage += damageTaken;
-        } else {
-            return;
-        }
+        damage += damageTaken;
 
         if (damage != maxDurability) {
             itemMeta.setLore(ItemStackFactory.addDurabilityLore(this, maxDurability - damage));

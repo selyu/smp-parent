@@ -8,25 +8,24 @@ import org.selyu.smp.core.item.recipe.Recipe;
 import org.selyu.smp.core.item.recipe.ShapedRecipeBuilder;
 import org.selyu.smp.core.util.DurabilityUtil;
 
-public final class HellstoneSwordItem extends SimpleDurableCustomItem {
-    public HellstoneSwordItem() {
-        super(CustomItemType.HELLSTONE_SWORD, Material.IRON_SWORD, 1, DurabilityUtil.HELLSTONE_INGOT * 2);
+public final class HellstoneHelmetItem extends SimpleDurableCustomItem {
+    public HellstoneHelmetItem() {
+        super(CustomItemType.HELLSTONE_HELMET, Material.IRON_HELMET, 1, DurabilityUtil.HELLSTONE_INGOT * 5);
     }
 
     @Override
     public @NotNull String getDisplayName() {
-        return "&fHellstone Sword";
+        return "&fHellstone Helmet";
     }
 
     @Override
     public @NotNull Recipe getRecipe() {
         return new ShapedRecipeBuilder(this)
                 .shape(
-                        '_', 'i', '_',
-                        '_', 'i', '_',
-                        '_', 's', '_'
+                        'i', 'i', 'i',
+                        'i', '_', 'i',
+                        '_', '_', '_'
                 )
-                .ingredient('s', Material.STICK)
                 .ingredient('i', CustomItemType.HELLSTONE_INGOT)
                 .build();
     }

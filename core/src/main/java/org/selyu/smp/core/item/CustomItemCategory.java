@@ -3,12 +3,12 @@ package org.selyu.smp.core.item;
 import org.jetbrains.annotations.NotNull;
 
 public enum CustomItemCategory {
-    SHEARS("Shears"),
     INGOT("Ingots"),
     PICKAXE("Pickaxes"),
     SHOVEL("Shovels"),
     SWORD("Swords"),
-    AXE("Axes");
+    AXE("Axes"),
+    HELMET("Helmets");
 
     private final String correctName;
 

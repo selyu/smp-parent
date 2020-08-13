@@ -2,7 +2,6 @@ package org.selyu.smp.core.item.impl.hellstone;
 
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.selyu.smp.core.item.CustomItemType;
 import org.selyu.smp.core.item.SimpleDurableCustomItem;
 import org.selyu.smp.core.item.recipe.Recipe;

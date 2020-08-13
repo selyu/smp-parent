@@ -1,16 +1,11 @@
 package org.selyu.smp.core.listener;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.jetbrains.annotations.Nullable;
@@ -49,35 +44,11 @@ public final class CustomItemListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onInteract(PlayerInteractEvent event) {
-        if (event.useInteractedBlock() == Event.Result.DENY || impossibleItem(event.getItem()))
-            return;
-
-        customItemManager.runEvent(event, event.getItem());
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onBlockBreak(BlockBreakEvent event) {
-        if (event.isCancelled() || event.getPlayer().getEquipment() == null || impossibleItem(event.getPlayer().getEquipment().getItemInMainHand()))
-            return;
-
-        customItemManager.runEvent(event, event.getPlayer().getEquipment().getItemInMainHand());
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onShear(PlayerShearEntityEvent event) {
+    public void onItemDamage(PlayerItemDamageEvent event) {
         if (event.isCancelled() || impossibleItem(event.getItem()))
             return;
 
         customItemManager.runEvent(event, event.getItem());
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onDamage(EntityDamageByEntityEvent event) {
-        if(event.isCancelled() || !(event.getDamager() instanceof Player) || impossibleItem(((Player) event.getDamager()).getInventory().getItemInMainHand()))
-            return;
-
-        customItemManager.runEvent(event, ((Player) event.getDamager()).getInventory().getItemInMainHand());
     }
 
     private boolean impossibleItem(@Nullable ItemStack itemStack) {
