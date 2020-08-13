@@ -40,12 +40,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.idrizp.oss-parent</groupId>
-            <artifactId>config</artifactId>
-            <version>7ba1e223b9</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.selyu.commands</groupId>
             <artifactId>spigot</artifactId>
             <version>b3ae8ca8ce</version>
@@ -73,12 +67,6 @@
             <groupId>net.kyori</groupId>
             <artifactId>adventure-platform-bukkit</artifactId>
             <version>4.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongodb-driver-sync</artifactId>
-            <version>4.0.4</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
