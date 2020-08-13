@@ -9,7 +9,13 @@ public enum CustomItemType {
     HELLSTONE_SHOVEL(CustomItemCategory.SHOVEL),
     HELLSTONE_SWORD(CustomItemCategory.SWORD),
     HELLSTONE_AXE(CustomItemCategory.AXE),
-    HELLSTONE_HELMET(CustomItemCategory.HELMET);
+    HELLSTONE_HOE(CustomItemCategory.HOE),
+    HELLSTONE_HELMET(CustomItemCategory.HELMET),
+    HELLSTONE_CHESTPLATE(CustomItemCategory.CHESTPLATE),
+    HELLSTONE_LEGGINGS(CustomItemCategory.LEGGING),
+    HELLSTONE_BOOTS(CustomItemCategory.BOOT),
+
+    ;
 
     private final CustomItemCategory customItemCategory;
 

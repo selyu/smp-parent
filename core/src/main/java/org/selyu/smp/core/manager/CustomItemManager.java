@@ -35,7 +35,11 @@ public final class CustomItemManager {
             new HellstoneShovelItem(),
             new HellstoneSwordItem(),
             new HellstoneAxeItem(),
-            new HellstoneHelmetItem()
+            new HellstoneHoeItem(),
+            new HellstoneHelmetItem(),
+            new HellstoneChestplateItem(),
+            new HellstoneLeggingsItem(),
+            new HellstoneBootsItem()
     );
 
     private final Map<Class<?>, List<SubscribedMethod>> subscribersMap = wrap(items);

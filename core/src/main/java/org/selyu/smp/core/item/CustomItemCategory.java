@@ -8,7 +8,11 @@ public enum CustomItemCategory {
     SHOVEL("Shovels"),
     SWORD("Swords"),
     AXE("Axes"),
-    HELMET("Helmets");
+    HELMET("Helmets"),
+    CHESTPLATE("Chestplates"),
+    LEGGING("Leggings"),
+    BOOT("Boots"),
+    HOE("Hoes");
 
     private final String correctName;
 
