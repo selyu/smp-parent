@@ -15,9 +15,7 @@ import org.selyu.smp.core.item.CustomItemType;
 import org.selyu.smp.core.item.SimpleDurableCustomItem;
 import org.selyu.smp.core.item.annotation.ItemEventHandler;
 import org.selyu.smp.core.item.impl.DiamondShearsItem;
-import org.selyu.smp.core.item.impl.hellstone.HellstoneIngotItem;
-import org.selyu.smp.core.item.impl.hellstone.HellstonePickaxeItem;
-import org.selyu.smp.core.item.impl.hellstone.HellstoneShovelItem;
+import org.selyu.smp.core.item.impl.hellstone.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -36,7 +34,9 @@ public final class CustomItemManager {
             new DiamondShearsItem(),
             new HellstoneIngotItem(),
             new HellstonePickaxeItem(),
-            new HellstoneShovelItem()
+            new HellstoneShovelItem(),
+            new HellstoneSwordItem(),
+            new HellstoneAxeItem()
     );
 
     private final Map<Class<?>, List<SubscribedMethod>> subscribersMap = wrap(items);

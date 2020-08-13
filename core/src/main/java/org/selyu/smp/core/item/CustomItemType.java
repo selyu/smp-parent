@@ -9,8 +9,9 @@ public enum CustomItemType {
     // HELLSTONE
     HELLSTONE_INGOT(CustomItemCategory.INGOT),
     HELLSTONE_PICKAXE(CustomItemCategory.PICKAXE),
-    HELLSTONE_SHOVEL(CustomItemCategory.SHOVEL)
-    ;
+    HELLSTONE_SHOVEL(CustomItemCategory.SHOVEL),
+    HELLSTONE_SWORD(CustomItemCategory.SWORD),
+    HELLSTONE_AXE(CustomItemCategory.AXE);
 
     private final CustomItemCategory customItemCategory;
 

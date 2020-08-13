@@ -1,10 +1,12 @@
 package org.selyu.smp.core.listener;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -40,7 +42,7 @@ public final class CustomItemListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCraft(CraftItemEvent event) {
         ItemStack itemStack = event.getRecipe().getResult();
-        if(isCustomItem(itemStack)) {
+        if (isCustomItem(itemStack)) {
             ItemStack realItem = customItemManager.getItemByType(getCustomItemType(itemStack)).getItem();
             event.setCurrentItem(realItem);
         }
@@ -68,6 +70,14 @@ public final class CustomItemListener implements Listener {
             return;
 
         customItemManager.runEvent(event, event.getItem());
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onDamage(EntityDamageByEntityEvent event) {
+        if(event.isCancelled() || !(event.getDamager() instanceof Player) || impossibleItem(((Player) event.getDamager()).getInventory().getItemInMainHand()))
+            return;
+
+        customItemManager.runEvent(event, ((Player) event.getDamager()).getInventory().getItemInMainHand());
     }
 
     private boolean impossibleItem(@Nullable ItemStack itemStack) {

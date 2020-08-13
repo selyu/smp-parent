@@ -6,7 +6,9 @@ public enum CustomItemCategory {
     SHEARS("Shears"),
     INGOT("Ingots"),
     PICKAXE("Pickaxes"),
-    SHOVEL("Shovels");
+    SHOVEL("Shovels"),
+    SWORD("Swords"),
+    AXE("Axes");
 
     private final String correctName;
 
